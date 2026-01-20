@@ -1,0 +1,12 @@
+EDA run: 2026-01-20 18:44:25
+
+N songs: 20024
+
+Outcome mean: 12.3
+Outcome variance: 67.73
+Dispersion ratio (Var/Mean): 5.51
+
+Share of songs lasting 1 week: 5.4%
+Share of songs lasting <= 2 weeks: 9.7%
+
+Dispersion ratio (Var/Mean) indicates whether variance materially exceeds the mean.
