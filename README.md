@@ -25,11 +25,21 @@ Song-level acoustic features were statistically significant but exhibited **mode
 - R (version 4.x)
 - R packages: tidyverse, MASS, AER, performance, DHARMa, broom
 
-### Steps
-1. Place the required raw data files in the `raw/` directory as described in `raw/README.md`
-2. Set the project root directory as the working directory in R
-3. Execute the full analysis pipeline by running:
+### How to Run the Analysis
+
+1. Clone or download this repository to your local machine and open the project in R or RStudio.
+
+2. Set the project root directory as your working directory. The project root is the top-level folder containing the `R/`, `raw/`, `clean/`, and `outputs/` directories.
+
+3. Ensure all required R packages are installed (see the package loading statements at the top of the scripts).
+
+4. Run the full analysis pipeline from the project root using:
 
 ```r
 source("R/00_run_all.R")
+```
+
+Running `00_run_all.R` executes the entire analysis pipeline end-to-end. This includes data cleaning and aggregation, exploratory data analysis, model estimation, and the generation of tables, figures, and diagnostics. All outputs are written automatically to the `clean/` and `outputs/` directories. Progress messages are printed to the console during execution.
+
+
 
