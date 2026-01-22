@@ -62,9 +62,10 @@ parse_artists_dict <- function(song_id_vec, artists_str_vec) {
       return(tibble(song_id = sid, artist_id = NA_character_))
     }
     
+    # Extract Spotify artist IDs only (22-char)
     m <- stringr::str_match_all(
       s,
-      "'([A-Za-z0-9]{22})'\\s*:\\s*'[^']*'"
+      "'([A-Za-z0-9]{22})'\\s*:"
     )[[1]]
     
     if (nrow(m) == 0) {
@@ -167,20 +168,14 @@ artist_song_prior <- artist_song |>
 song_artist_history <- artist_song_prior |>
   group_by(song_id) |>
   summarise(
-    artist_prior_n_songs =
-      if (all(is.na(prior_n_songs))) 0 else mean(prior_n_songs, na.rm = TRUE),
-    
-    artist_avg_longevity_prior =
-      if (all(is.na(artist_avg_longevity_prior_artist))) 0 else mean(artist_avg_longevity_prior_artist, na.rm = TRUE),
-    
-    artist_avg_peak_rank_prior =
-      if (all(is.na(artist_avg_peak_rank_prior_artist))) 0 else mean(artist_avg_peak_rank_prior_artist, na.rm = TRUE),
-    
+    artist_prior_n_songs       = mean(prior_n_songs),
+    artist_avg_longevity_prior = mean(artist_avg_longevity_prior_artist),
+    artist_avg_peak_rank_prior = mean(artist_avg_peak_rank_prior_artist),
     .groups = "drop"
   ) |>
   mutate(
-    artist_avg_longevity_prior  = round(artist_avg_longevity_prior, 2),
-    artist_avg_peak_rank_prior  = round(artist_avg_peak_rank_prior, 2)
+    artist_avg_longevity_prior = round(artist_avg_longevity_prior, 2),
+    artist_avg_peak_rank_prior = round(artist_avg_peak_rank_prior, 2)
   )
 
 # ----------------------------------------------------------------------
@@ -212,12 +207,7 @@ song_df <- songs |>
     by = "song_id"
   ) |>
   mutate(
-    tempo = na_if(tempo, 0),
-    
-    # Set missing artist-history values to zero
-    artist_prior_n_songs       = if_else(is.na(artist_prior_n_songs), 0, artist_prior_n_songs),
-    artist_avg_longevity_prior = if_else(is.na(artist_avg_longevity_prior), 0, artist_avg_longevity_prior),
-    artist_avg_peak_rank_prior = if_else(is.na(artist_avg_peak_rank_prior), 0, artist_avg_peak_rank_prior)
+    tempo = na_if(tempo, 0)
   ) |>
   dplyr::select(
     song_id, song_name,
