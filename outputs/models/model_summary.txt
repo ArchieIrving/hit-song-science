@@ -1,10 +1,10 @@
 ============================================================
-Report run: 2026-01-20 18:44:37
+Report run: 2026-01-23 13:55:58
 ============================================================
 
 
 ----- Sample size / design matrix (richest spec used in fitting) -----
-N = 20024
+N = 20303
 rank(X) = 31 ; ncol(X) = 31
 OK: full rank design matrix.
 
@@ -13,72 +13,88 @@ Scaled (1 SD): song_rank_entry, artist_prior_n_songs, artist_avg_longevity_prior
 Not scaled: n_artists_collab
 
 ----- Omnibus model test -----
-Omnibus LRT (NB main vs null): χ²(15) = 3022, p < 0.001
+Omnibus LRT (NB main vs null): χ²(15) = 3086, p < 0.001
 
 ----- Poisson overdispersion test -----
-Dispersion test (Poisson): statistic = 50.94, p < 0.001
+Dispersion test (Poisson): statistic = 51.34, p < 0.001
 
 ----- Model comparison (AIC/BIC; lower is better) -----
 
 Model                                 AIC          BIC
 --------------------------------------------------------
-Poisson                         174737.77    174982.82
-NB main (frozen)                133655.18    133789.56
-NB + categoricals               133628.98    133881.93
+Poisson                         176914.95    177160.43
+NB main (frozen)                135461.28    135595.90
+NB + categoricals               135436.12    135689.51
 
 ----- Likelihood ratio test (nested NB models) -----
-LRT (NB main vs NB + categoricals): χ²(15) = 56.2, p < 0.001
+LRT (NB main vs NB + categoricals): χ²(15) = 55.16, p < 0.001
 
 ----- Collinearity (NB main) -----
 # Check for Multicollinearity
 
 Low Correlation
 
-                       Term  VIF   VIF 95% CI adj. VIF Tolerance Tolerance 95% CI
-            song_rank_entry 1.12 [1.10, 1.14]     1.06      0.89     [0.88, 0.91]
-           n_artists_collab 1.06 [1.05, 1.08]     1.03      0.94     [0.93, 0.95]
-       artist_prior_n_songs 1.23 [1.21, 1.25]     1.11      0.82     [0.80, 0.83]
- artist_avg_longevity_prior 4.08 [3.98, 4.18]     2.02      0.25     [0.24, 0.25]
- artist_avg_peak_rank_prior 4.27 [4.17, 4.38]     2.07      0.23     [0.23, 0.24]
-                duration_ms 1.13 [1.11, 1.15]     1.06      0.88     [0.87, 0.90]
-               acousticness 1.69 [1.66, 1.72]     1.30      0.59     [0.58, 0.60]
-               danceability 1.61 [1.58, 1.64]     1.27      0.62     [0.61, 0.63]
-                     energy 3.20 [3.12, 3.27]     1.79      0.31     [0.31, 0.32]
-           instrumentalness 1.05 [1.04, 1.07]     1.03      0.95     [0.93, 0.96]
-                   liveness 1.07 [1.06, 1.09]     1.03      0.93     [0.92, 0.95]
-                   loudness 2.33 [2.28, 2.38]     1.53      0.43     [0.42, 0.44]
-                speechiness 1.17 [1.15, 1.19]     1.08      0.86     [0.84, 0.87]
-                    valence 1.80 [1.76, 1.84]     1.34      0.56     [0.54, 0.57]
-                      tempo 1.10 [1.09, 1.12]     1.05      0.91     [0.89, 0.92]
+                       Term  VIF   VIF 95% CI adj. VIF Tolerance
+            song_rank_entry 1.12 [1.10, 1.14]     1.06      0.90
+           n_artists_collab 1.06 [1.05, 1.08]     1.03      0.94
+       artist_prior_n_songs 1.23 [1.21, 1.25]     1.11      0.82
+ artist_avg_longevity_prior 4.09 [4.00, 4.20]     2.02      0.24
+ artist_avg_peak_rank_prior 4.29 [4.19, 4.40]     2.07      0.23
+                duration_ms 1.13 [1.12, 1.15]     1.06      0.88
+               acousticness 1.69 [1.65, 1.72]     1.30      0.59
+               danceability 1.61 [1.58, 1.64]     1.27      0.62
+                     energy 3.19 [3.11, 3.26]     1.79      0.31
+           instrumentalness 1.05 [1.04, 1.07]     1.03      0.95
+                   liveness 1.07 [1.06, 1.09]     1.03      0.93
+                   loudness 2.32 [2.27, 2.38]     1.52      0.43
+                speechiness 1.17 [1.15, 1.19]     1.08      0.86
+                    valence 1.80 [1.76, 1.83]     1.34      0.56
+                      tempo 1.10 [1.09, 1.12]     1.05      0.91
+ Tolerance 95% CI
+     [0.88, 0.91]
+     [0.92, 0.95]
+     [0.80, 0.83]
+     [0.24, 0.25]
+     [0.23, 0.24]
+     [0.87, 0.90]
+     [0.58, 0.60]
+     [0.61, 0.63]
+     [0.31, 0.32]
+     [0.93, 0.96]
+     [0.92, 0.95]
+     [0.42, 0.44]
+     [0.84, 0.87]
+     [0.55, 0.57]
+     [0.89, 0.92]
 
 ----- Influence (Cook's distance; NB main) -----
-Rule-of-thumb threshold: 4/n = 0.0001998
-Max Cook's distance: 0.009167
-N above threshold: 892 (4.5%)
-Top Cook's distances (index:value): 2775:0.009167, 2419:0.005799, 5734:0.005569, 4300:0.005254, 1408:0.005029
+Rule-of-thumb threshold: 4/n = 0.000197
+Max Cook's distance: 0.009036
+N above threshold: 902 (4.4%)
+Top Cook's distances (index:value): 2783:0.009036, 2424:0.005793, 5786:0.005568, 4328:0.005098, 1411:0.004905
 
 ----- Model identity check -----
-fit_meta run_time: 2026-01-20 18:44:28.263695
-nobs(m_nb): 20024
+fit_meta run_time: 2026-01-23 13:55:49.405607
+nobs(m_nb): 20303
 formula(m_nb): weeks_on_chart ~ song_rank_entry + n_artists_collab + artist_prior_n_songs +      artist_avg_longevity_prior + artist_avg_peak_rank_prior +      duration_ms + acousticness + danceability + energy + instrumentalness +      liveness + loudness + speechiness + valence + tempo
 
 ----- IRR table (NB main; 95% CI) -----
 
 term                                       b      SE      IRR      low     high          p
 ------------------------------------------------------------------------------------------
-song_rank_entry                        0.129   0.005    1.138    1.127    1.149     <0.001
-n_artists_collab                       0.009   0.012    1.009    0.985    1.035     0.4401
+song_rank_entry                        0.129   0.005    1.137    1.127    1.148     <0.001
+n_artists_collab                       0.011   0.012    1.012    0.988    1.036     0.3380
 artist_prior_n_songs                  -0.046   0.005    0.955    0.946    0.965     <0.001
-artist_avg_longevity_prior             0.253   0.009    1.288    1.264    1.312     <0.001
-artist_avg_peak_rank_prior            -0.224   0.009    0.799    0.784    0.815     <0.001
-duration_ms                            0.078   0.005    1.082    1.070    1.093     <0.001
-acousticness                          -0.047   0.006    0.954    0.943    0.966     <0.001
-danceability                           0.071   0.006    1.074    1.062    1.086     <0.001
-energy                                -0.034   0.008    0.967    0.952    0.983     <0.001
+artist_avg_longevity_prior             0.253   0.009    1.288    1.265    1.312     <0.001
+artist_avg_peak_rank_prior            -0.223   0.009    0.800    0.785    0.815     <0.001
+duration_ms                            0.079   0.005    1.082    1.071    1.093     <0.001
+acousticness                          -0.046   0.006    0.955    0.944    0.966     <0.001
+danceability                           0.072   0.006    1.075    1.062    1.087     <0.001
+energy                                -0.033   0.008    0.967    0.952    0.983     <0.001
 instrumentalness                      -0.021   0.005    0.979    0.970    0.988     <0.001
-liveness                              -0.022   0.005    0.978    0.969    0.988     <0.001
-loudness                               0.033   0.007    1.033    1.019    1.047     <0.001
+liveness                              -0.022   0.005    0.978    0.969    0.987     <0.001
+loudness                               0.034   0.007    1.034    1.020    1.048     <0.001
 speechiness                           -0.040   0.005    0.961    0.952    0.970     <0.001
-valence                               -0.020   0.006    0.980    0.968    0.992     <0.001
-tempo                                  0.010   0.005    1.010    1.001    1.020     0.0312
+valence                               -0.021   0.006    0.980    0.968    0.992     <0.001
+tempo                                  0.010   0.005    1.010    1.001    1.020     0.0304
 
