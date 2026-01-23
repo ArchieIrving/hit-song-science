@@ -1,27 +1,20 @@
 # R/03_fit_nb_models.R ------------------------------------------------------
-# Model fitting for song chart longevity (weeks_on_chart).
-#
-# Input:
-#   - clean/song_df.csv
-#
-# Output:
-#   - outputs/models/all_models.rds
-#   - outputs/models/model_fit_meta.rds
+# Fit count models for chart longevity (weeks_on_chart).
+# Input:  clean/song_df.csv
+# Output: outputs/models/all_models.rds; outputs/models/model_fit_meta.rds
 
 suppressPackageStartupMessages({
   library(dplyr)
   library(tidyr)
   library(readr)
-  library(MASS) # glm.nb (masks select())
+  library(MASS) # glm.nb (masks dplyr::select())
   library(AER)  # dispersiontest
 })
 
 source("R/analysis_setup.R")
 source("R/helpers.R")
 
-# ======================================================================
-# Output paths
-# ======================================================================
+# ---- Output paths ---------------------------------------------------------
 
 DIR_MODELS  <- "outputs/models"
 PATH_MODELS <- file.path(DIR_MODELS, "all_models.rds")
@@ -29,39 +22,32 @@ PATH_META   <- file.path(DIR_MODELS, "model_fit_meta.rds")
 
 ensure_dirs(DIR_MODELS)
 
-# ======================================================================
-# Model formulas
-# ======================================================================
+# ---- Model formulas -------------------------------------------------------
 
-# Main reporting model: core predictors + acoustic features
+# Main model used for reporting (core + acoustic features)
 f_main <- stats::as.formula(
-  paste0(
-    OUTCOME_VAR, " ~ ",
-    paste(c(core_vars, audio_vars), collapse = " + ")
-  )
+  paste0(OUTCOME_VAR, " ~ ", paste(c(core_vars, audio_vars), collapse = " + "))
 )
 
-# Alternative specification including musical categorical variables
+# Comparison model including musical categoricals
 f_cat <- stats::update(
   f_main,
   stats::as.formula(paste(". ~ . +", paste(cat_vars, collapse = " + ")))
 )
 
-# Poisson model fitted for comparison only
+# Poisson is fitted for overdispersion comparison on the richest specification
 f_pois <- f_cat
 
-# ======================================================================
-# Data
-# ======================================================================
+# ---- Data -----------------------------------------------------------------
 
-song_df <- readr::read_csv("clean/song_df.csv", show_col_types = FALSE)
+song_df <- read_csv("clean/song_df.csv", show_col_types = FALSE)
 song_df <- encode_factors(song_df)
 
 model_vars <- all.vars(f_pois)
 
 model_df <- song_df |>
-  dplyr::select(dplyr::all_of(model_vars)) |>
-  tidyr::drop_na()
+  dplyr::select(all_of(model_vars)) |>
+  drop_na()
 
 std <- standardise_predictors(
   df = model_df,
@@ -73,17 +59,13 @@ std <- standardise_predictors(
 model_df_scaled <- std$df_scaled
 scale_vars      <- std$scale_vars
 
-# ======================================================================
-# Design matrix check (richest specification)
-# ======================================================================
+# ---- Design check (richest specification) --------------------------------
 
 X <- stats::model.matrix(f_pois, data = model_df_scaled)
 design_rank <- qr(X)$rank
 design_p    <- ncol(X)
 
-# ======================================================================
-# Fit models
-# ======================================================================
+# ---- Fit models -----------------------------------------------------------
 
 m_pois <- stats::glm(
   f_pois,
@@ -102,9 +84,7 @@ models <- list(
   nb_with_categoricals = m_nb_cat
 )
 
-# ======================================================================
-# Save fitted models and metadata
-# ======================================================================
+# ---- Save models and metadata --------------------------------------------
 
 save_rds_safe(models, PATH_MODELS)
 

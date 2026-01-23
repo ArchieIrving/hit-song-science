@@ -1,4 +1,4 @@
-# R/analysis_setup.R ------------------------------------------------------
+# R/analysis_setup.R --------------------------------------------------------
 # Analysis definitions, variable sets, and labelling conventions.
 
 suppressPackageStartupMessages({
@@ -10,15 +10,11 @@ suppressPackageStartupMessages({
 
 withr::local_options(list(tibble.width = Inf, scipen = 999))
 
-# ======================================================================
-# Core constants
-# ======================================================================
+# ---- Core constants -------------------------------------------------------
 
 OUTCOME_VAR <- "weeks_on_chart"
 
-# ======================================================================
-# Variable sets (match clean/song_df.csv)
-# ======================================================================
+# ---- Variable sets (match clean/song_df.csv) -----------------------------
 
 core_vars <- c(
   "song_rank_entry",
@@ -38,9 +34,7 @@ cat_vars <- c(
   "key", "mode", "time_signature", "song_type"
 )
 
-# ======================================================================
-# Labels
-# ======================================================================
+# ---- Labels ---------------------------------------------------------------
 
 NICE_NAMES <- c(
   song_rank_entry            = "Chart entry position",
@@ -62,7 +56,7 @@ NICE_NAMES <- c(
   mode                       = "Mode",
   time_signature             = "Time signature",
   song_type                  = "Song type",
-  weeks_on_chart             = "Weeks on chart"
+  weeks_on_chart             = "Chart longevity"
 )
 
 label_from_map <- function(x, mapping = NICE_NAMES) {
@@ -75,9 +69,7 @@ named_labels <- function(vars, mapping = NICE_NAMES) {
   setNames(label_from_map(vars, mapping), vars)
 }
 
-# ======================================================================
-# Encoding
-# ======================================================================
+# ---- Encoding -------------------------------------------------------------
 
 encode_factors <- function(df) {
   stopifnot(is.data.frame(df))
@@ -85,6 +77,7 @@ encode_factors <- function(df) {
   
   df |>
     dplyr::mutate(
+      # Spotify "key" uses -1 for unknown
       key = dplyr::na_if(key, -1),
       key = factor(key),
       
@@ -95,18 +88,12 @@ encode_factors <- function(df) {
       song_type = stats::relevel(song_type, ref = "Solo"),
       
       time_signature = as.character(time_signature),
-      time_signature = dplyr::if_else(
-        time_signature %in% c("3", "4"),
-        time_signature,
-        "Other"
-      ),
+      time_signature = dplyr::if_else(time_signature %in% c("3", "4"), time_signature, "Other"),
       time_signature = factor(time_signature, levels = c("4", "3", "Other"))
     )
 }
 
-# ======================================================================
-# Scaling
-# ======================================================================
+# ---- Scaling --------------------------------------------------------------
 
 standardise_predictors <- function(df, core_vars, audio_vars, exclude = character()) {
   scale_vars <- intersect(c(core_vars, audio_vars), names(df))
@@ -123,9 +110,7 @@ standardise_predictors <- function(df, core_vars, audio_vars, exclude = characte
   )
 }
 
-# ======================================================================
-# Effect-size increments
-# ======================================================================
+# ---- Effect-size increments -----------------------------------------------
 
 INC_MAP <- tibble::tibble(
   term = c(
@@ -161,53 +146,16 @@ label_increment_suffix <- function(term) {
       "acousticness", "danceability", "energy", "instrumentalness",
       "liveness", "speechiness", "valence"
     )                                   ~ " (per 0.1)",
-    term == "tempo"                     ~ " (per 10 BPM)",
-    term == "loudness"                  ~ " (per 5 dB)",
-    term == "duration_ms"               ~ " (per 10s)",
-    TRUE                                ~ ""
+    term == "tempo"                      ~ " (per 10 BPM)",
+    term == "loudness"                   ~ " (per 5 dB)",
+    term == "duration_ms"                ~ " (per 10s)",
+    TRUE                                 ~ ""
   )
 }
 
-# ======================================================================
-# Model-term labelling
-# ======================================================================
-
-label_model_term <- function(term) {
-  term_clean <- as.character(term)[1]
-  term_clean <- stringr::str_replace_all(term_clean, "`", "")
-  
-  if (term_clean %in% names(NICE_NAMES)) {
-    return(label_from_map(term_clean))
-  }
-  
-  if (stringr::str_starts(term_clean, "key")) {
-    return(paste0("Key: ", stringr::str_remove(term_clean, "^key")))
-  }
-  if (stringr::str_starts(term_clean, "mode")) {
-    return(paste0("Mode: ", stringr::str_remove(term_clean, "^mode")))
-  }
-  if (stringr::str_starts(term_clean, "time_signature")) {
-    return(paste0("Time signature: ", stringr::str_remove(term_clean, "^time_signature")))
-  }
-  if (stringr::str_starts(term_clean, "song_type")) {
-    return(paste0("Song type: ", stringr::str_remove(term_clean, "^song_type")))
-  }
-  
-  stringr::str_replace_all(term_clean, "_", " ")
-}
-
-label_model_term_with_increment <- function(term) {
-  base <- label_model_term(term)
-  paste0(base, label_increment_suffix(as.character(term)))
-}
-
-# ======================================================================
-# Formula builder
-# ======================================================================
+# ---- Formula builder ------------------------------------------------------
 
 build_nb_formula <- function() {
   rhs <- c(core_vars, audio_vars, cat_vars)
-  stats::as.formula(
-    paste0(OUTCOME_VAR, " ~ ", paste(rhs, collapse = " + "))
-  )
+  stats::as.formula(paste0(OUTCOME_VAR, " ~ ", paste(rhs, collapse = " + ")))
 }

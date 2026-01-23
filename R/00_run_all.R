@@ -1,6 +1,8 @@
 # R/00_run_all.R ------------------------------------------------------------
 # Runs the full analysis pipeline end-to-end from the project root.
 
+#All scripts assume the working directory is set to the parent folder of the project root (i.e. the directory containing raw/, clean/, outputs/, and R/).
+
 
 options(tibble.width = Inf, scipen = 999)
 

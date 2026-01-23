@@ -1,34 +1,53 @@
-# R/helpers.R -------------------------------------------------------------
-# Shared helper functions used across the analysis pipeline.
-#
-# This file contains small utilities for directory handling,
-# saving outputs, and applying a consistent plotting style.
-
+# R/helpers.R --------------------------------------------------------------
+# Small helper utilities shared across the analysis pipeline:
+# - directory creation
+# - saving plots / text / objects
+# - a project-wide ggplot theme
 
 suppressPackageStartupMessages({
   library(ggplot2)
   library(readr)
 })
 
-# ----------------------------------------------------------------------
-# Directories
-# ----------------------------------------------------------------------
+# ---- Directories ---------------------------------------------------------
 
-# Create directories if they do not already exist.
 ensure_dirs <- function(paths) {
   stopifnot(is.character(paths), length(paths) >= 1)
+  
   paths <- unique(paths)
   
   for (p in paths) {
-    if (!dir.exists(p)) dir.create(p, showWarnings = FALSE, recursive = TRUE)
+    if (dir.exists(p)) next
+    dir.create(p, showWarnings = FALSE, recursive = TRUE)
   }
+  
   invisible(TRUE)
 }
 
-# ----------------------------------------------------------------------
-# Saving helpers
-# ----------------------------------------------------------------------
+# ---- Saving helpers ------------------------------------------------------
 
+# Write text output to disk, creating directories if needed.
+write_lines_safe <- function(lines, path) {
+  stopifnot(is.character(path), length(path) == 1)
+  stopifnot(is.character(lines))
+  
+  ensure_dirs(dirname(path))
+  readr::write_lines(lines, path)
+  
+  invisible(TRUE)
+}
+
+# Save an R object as .rds, ensuring the output directory exists.
+save_rds_safe <- function(object, path) {
+  stopifnot(is.character(path), length(path) == 1)
+  
+  ensure_dirs(dirname(path))
+  saveRDS(object, path)
+  
+  invisible(TRUE)
+}
+
+# Save a ggplot with consistent export settings.
 save_plot <- function(filename,
                       plot_obj,
                       dir = "outputs/figures",
@@ -53,34 +72,16 @@ save_plot <- function(filename,
   invisible(TRUE)
 }
 
-write_lines_safe <- function(lines, path) {
-  stopifnot(is.character(path), length(path) == 1)
-  stopifnot(is.character(lines))
-  
-  ensure_dirs(dirname(path))
-  readr::write_lines(lines, path)
-  invisible(TRUE)
-}
 
-save_rds_safe <- function(object, path) {
-  stopifnot(is.character(path), length(path) == 1)
-  
-  ensure_dirs(dirname(path))
-  saveRDS(object, path)
-  invisible(TRUE)
-}
+# ---- Plot theme ----------------------------------------------------------
 
-# ----------------------------------------------------------------------
-# Plot theme
-# ----------------------------------------------------------------------
-
-COL_PRIMARY  <- "#4C72B0"
+# Project palette / styling constants
+COL_PRIMARY  <- "#0072B2"
 COL_NEUTRAL  <- "grey30"
 COL_GRID     <- "grey92"
 COL_OUTLINE  <- "grey90"
 COL_REF_LINE <- "grey55"
 
-# Project-wide ggplot theme used across all figures.
 theme_project <- function(base_size = 12) {
   ggplot2::theme_minimal(base_size = base_size) +
     ggplot2::theme(

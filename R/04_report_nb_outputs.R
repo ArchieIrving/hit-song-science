@@ -13,10 +13,10 @@
 #   - outputs/figures/nb_effects_percent_significant_only.png
 #
 # Notes:
-# - nb_main is used for reporting; nb_with_categoricals is used for model comparison.
-# - Continuous predictors are standardised in fitting (03); effects are rescaled to
-#   raw-unit increments using the complete-case modelling sample.
-
+# - nb_main is used for reporting; nb_with_categoricals is used for comparison.
+# - Continuous predictors are standardised in fitting (03); effects are rescaled
+#   to raw-unit increments using the complete-case modelling sample.
+#
 
 suppressPackageStartupMessages({
   library(dplyr)
@@ -34,9 +34,7 @@ suppressPackageStartupMessages({
 source("R/analysis_setup.R")
 source("R/helpers.R")
 
-# ======================================================================
-# Parameters + dirs
-# ======================================================================
+# ---- Parameters + dirs ----------------------------------------------------
 
 DHARMA_N     <- 1000
 DHARMA_SEED  <- 123
@@ -46,9 +44,7 @@ DIR_MODELS  <- "outputs/models"
 DIR_FIGURES <- "outputs/figures"
 ensure_dirs(c(DIR_MODELS, DIR_FIGURES))
 
-# ======================================================================
-# Load models + metadata
-# ======================================================================
+# ---- Load models + metadata ----------------------------------------------
 
 models   <- readRDS(file.path(DIR_MODELS, "all_models.rds"))
 fit_meta <- readRDS(file.path(DIR_MODELS, "model_fit_meta.rds"))
@@ -56,19 +52,20 @@ fit_meta <- readRDS(file.path(DIR_MODELS, "model_fit_meta.rds"))
 required_models <- c("poisson", "nb_main", "nb_with_categoricals")
 missing_models  <- setdiff(required_models, names(models))
 if (length(missing_models) > 0) {
-  stop("Missing expected models in all_models.rds: ", paste(missing_models, collapse = ", "), call. = FALSE)
+  stop(
+    "Missing expected models in all_models.rds: ",
+    paste(missing_models, collapse = ", "),
+    call. = FALSE
+  )
 }
 
 m_pois <- models$poisson
 m_nb   <- models$nb_main
 m_nb_c <- models$nb_with_categoricals
 
-# Null model for omnibus LRT (required for model_summary.txt)
 m_nb_null <- update(m_nb, . ~ 1)
 
-# ======================================================================
-# Helpers (local to this script)
-# ======================================================================
+# ---- Helpers --------------------------------------------------------------
 
 tidy_irr <- function(m, conf_level = 0.95) {
   broom::tidy(m, conf.int = TRUE, conf.level = conf_level) |>
@@ -95,40 +92,32 @@ extract_lrt <- function(a) {
   )
 }
 
-# ======================================================================
-# Complete-case raw sample (single rebuild for SD conversion + descriptives)
-# ======================================================================
+# ---- Complete-case raw sample (SD conversion + descriptives) --------------
 
-song_df_raw <- readr::read_csv("clean/song_df.csv", show_col_types = FALSE) |>
+song_df_raw <- read_csv("clean/song_df.csv", show_col_types = FALSE) |>
   encode_factors()
 
-# Use the richest spec (Poisson) to match the complete-case drop used in fitting
 model_vars_rich <- all.vars(stats::formula(m_pois))
 
 df_cc_raw <- song_df_raw |>
   dplyr::select(dplyr::all_of(model_vars_rich)) |>
-  tidyr::drop_na()
+  drop_na()
 
-# numeric predictors available in the complete-case modelling sample (raw units)
 num_vars_raw <- names(df_cc_raw)[vapply(df_cc_raw, is.numeric, logical(1))]
 num_vars_raw <- setdiff(num_vars_raw, OUTCOME_VAR)
 
 scale_vars_fit <- unique(as.character(fit_meta$scale_vars))
 
 sd_lookup <- df_cc_raw |>
-  dplyr::summarise(dplyr::across(dplyr::all_of(scale_vars_fit), sd)) |>
-  tidyr::pivot_longer(dplyr::everything(), names_to = "term", values_to = "sd_raw")
+  summarise(across(all_of(scale_vars_fit), sd)) |>
+  pivot_longer(everything(), names_to = "term", values_to = "sd_raw")
 
-# ======================================================================
-# IRR table objects (frozen model only)
-# ======================================================================
+# ---- IRR table objects (NB main) ------------------------------------------
 
-# Full (for plotting + CSV)
 nb_irr_full <- tidy_irr(m_nb)
 
-# Text output (rounded, fixed-width; includes b and SE)
 nb_irr_txt <- nb_irr_full |>
-  dplyr::mutate(
+  mutate(
     b   = round(estimate, 3),
     SE  = round(std.error, 3),
     IRR = round(IRR, 3),
@@ -163,9 +152,7 @@ irr_lines <- c(
   ""
 )
 
-# ======================================================================
-# Model summary (text-only)
-# ======================================================================
+# ---- Model summary (text-only) --------------------------------------------
 
 lrt_cat  <- suppressWarnings(anova(m_nb, m_nb_c, test = "LRT"))
 lrt_cat  <- extract_lrt(lrt_cat)
@@ -287,20 +274,17 @@ lines <- c(
   ""
 )
 
-# Append IRR table to the end of model_summary.txt
 lines <- c(lines, irr_lines)
 
 write_lines_safe(lines, file.path(DIR_MODELS, "model_summary.txt"))
 
-# ======================================================================
-# CONTINUOUS PREDICTOR SUMMARY (RAW DISTRIBUTION + SCALING INFO)
-# ======================================================================
+# ---- Continuous predictor summary (raw distribution + scaling) ------------
 
 predictor_summary_continuous <- df_cc_raw |>
   dplyr::select(dplyr::all_of(num_vars_raw)) |>
-  dplyr::summarise(
-    dplyr::across(
-      dplyr::everything(),
+  summarise(
+    across(
+      everything(),
       list(
         mean   = mean,
         sd     = sd,
@@ -315,34 +299,29 @@ predictor_summary_continuous <- df_cc_raw |>
       .names = "{.col}__{.fn}"
     )
   ) |>
-  tidyr::pivot_longer(
-    cols = dplyr::everything(),
+  pivot_longer(
+    cols = everything(),
     names_to = c("term", "stat"),
     names_sep = "__",
     values_to = "value"
   ) |>
-  tidyr::pivot_wider(names_from = stat, values_from = value) |>
-  dplyr::mutate(IQR = q75 - q25) |>
-  dplyr::left_join(INC_MAP, by = "term") |>
-  dplyr::mutate(
+  pivot_wider(names_from = stat, values_from = value) |>
+  mutate(IQR = q75 - q25) |>
+  left_join(INC_MAP, by = "term") |>
+  mutate(
     inc_over_SD  = inc / sd,
     inc_over_IQR = inc / IQR
   ) |>
-  dplyr::arrange(term)
+  arrange(term)
 
-readr::write_csv(
+write_csv(
   predictor_summary_continuous,
   file.path(DIR_MODELS, "final_model_predictor_summary_continuous.csv")
 )
 
-# ======================================================================
-# Figures
-# ======================================================================
+# ---- Figures --------------------------------------------------------------
 
-# ----------------------------------------------------------------------
-# DHARMa diagnostics (frozen model)
-# ----------------------------------------------------------------------
-
+# DHARMa is used to check calibration / dispersion / outliers post-fit.
 set.seed(DHARMA_SEED)
 sim <- DHARMa::simulateResiduals(m_nb, n = DHARMA_N)
 
@@ -351,14 +330,11 @@ grDevices::png(out_resid, width = 1400, height = 1000, res = 200)
 plot(sim)
 grDevices::dev.off()
 
-# ----------------------------------------------------------------------
-# IRR plot (significant terms only; frozen model)
-# ----------------------------------------------------------------------
-
+# Significant-term effects are rescaled to raw-unit increments for interpretability.
 sig <- nb_irr_full |>
-  dplyr::filter(!is.na(p.value), p.value < IRR_P_CUTOFF) |>
-  dplyr::mutate(
-    group = dplyr::case_when(
+  filter(!is.na(p.value), p.value < IRR_P_CUTOFF) |>
+  mutate(
+    group = case_when(
       term %in% c(
         "song_rank_entry",
         "artist_prior_n_songs",
@@ -369,13 +345,13 @@ sig <- nb_irr_full |>
       TRUE ~ "Controls"
     ),
     group = factor(group, levels = c("Pre-entry factors", "Acoustic features", "Controls")),
-    label = vapply(term, label_model_term_with_increment, character(1))
+    label = paste0(label_from_map(term), label_increment_suffix(term))
   ) |>
-  dplyr::left_join(INC_MAP, by = "term") |>
-  dplyr::mutate(inc = if_else(is.na(inc), 1, inc)) |>
-  dplyr::left_join(sd_lookup, by = "term") |>
-  dplyr::mutate(
-    expo = dplyr::case_when(
+  left_join(INC_MAP, by = "term") |>
+  mutate(inc = if_else(is.na(inc), 1, inc)) |>
+  left_join(sd_lookup, by = "term") |>
+  mutate(
+    expo = case_when(
       term %in% scale_vars_fit ~ inc / sd_raw,
       TRUE ~ inc
     ),
@@ -394,11 +370,11 @@ sig <- nb_irr_full |>
     
     ord = abs(pct)
   ) |>
-  dplyr::group_by(group) |>
-  dplyr::mutate(label = forcats::fct_reorder(label, ord)) |>
-  dplyr::ungroup() |>
-  dplyr::arrange(group, desc(ord)) |>
-  dplyr::mutate(
+  group_by(group) |>
+  mutate(label = forcats::fct_reorder(label, ord)) |>
+  ungroup() |>
+  arrange(group, desc(ord)) |>
+  mutate(
     x_lab = if_else(pct >= 0, pct_high + 1.2, pct_low - 1.2),
     hjust = if_else(pct >= 0, 0, 1),
     pct_label = sprintf("%+.0f%%", pct)
@@ -426,8 +402,7 @@ p_sig <- ggplot(sig, aes(y = label)) +
     expand = expansion(mult = c(0.02, 0.08))
   ) +
   labs(
-    title = "Effects on Chart Longevity",
-    x = "Percent change in expected weeks on chart (per stated increment)",
+    x = "Percentage change in expected chart longevity",
     y = NULL
   ) +
   theme_project() +
