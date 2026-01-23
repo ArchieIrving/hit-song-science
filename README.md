@@ -23,7 +23,7 @@ Song-level acoustic features were statistically significant but exhibited **mode
 
 ### Requirements
 - R (version 4.x)
-- R packages: tidyverse, MASS, AER, performance, DHARMa, broom
+- R packages: tidyverse, scico, MASS, AER, performance, DHARMa, broom
 
 ### How to Run the Analysis
 
