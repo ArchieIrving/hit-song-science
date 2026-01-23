@@ -384,12 +384,13 @@ x_lim <- max(abs(c(sig$pct_low, sig$pct_high)), na.rm = TRUE) + 3
 
 p_sig <- ggplot(sig, aes(y = label)) +
   geom_vline(xintercept = 0, linetype = "dashed", linewidth = 0.8, colour = COL_REF_LINE) +
-  geom_errorbarh(
+  geom_errorbar(
     aes(xmin = pct_low, xmax = pct_high),
+    orientation = "y",
     height = 0.18,
     linewidth = 0.7,
     colour = "grey55"
-  ) +
+  )+
   geom_point(aes(x = pct), size = 3.0, colour = COL_PRIMARY) +
   geom_text(
     aes(x = x_lab, label = pct_label, hjust = hjust),
