@@ -142,7 +142,7 @@ p_01 <- ggplot() +
     title    = "Acoustic feature profiles by cluster",
     subtitle = "Points show average feature levels for each group. Extreme values are capped for readability."
   ) +
-  theme_project(base_size = BASE_SIZE) +
+  theme_acoustic(base_size = BASE_SIZE) +
   theme(
     legend.position = "none",
     panel.grid      = element_blank(),

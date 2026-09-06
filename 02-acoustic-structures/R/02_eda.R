@@ -21,8 +21,8 @@ source(ap("R/helpers.R"))
 DIR_EDA <- ap("outputs/eda")
 DIR_EDA_TABLES <- file.path(DIR_EDA, "tables")
 
-ensure_dir(DIR_EDA)
-ensure_dir(DIR_EDA_TABLES)
+ensure_dirs(DIR_EDA)
+ensure_dirs(DIR_EDA_TABLES)
 
 song_df <- read_csv(ap("clean/song_df.csv"), show_col_types = FALSE)
 
@@ -55,7 +55,7 @@ make_pca_plot <- function(df, vars, k_clusters, title, out_file) {
       y = sprintf("PC2 (%.1f%%)", 100 * ve[2])
     ) +
     scale_colour_cluster() +
-    theme_project()
+    theme_acoustic()
   
   save_fig(p, out_file, width = 9.5, height = 6.5, dpi = 300)
   invisible(p)

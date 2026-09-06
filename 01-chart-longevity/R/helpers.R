@@ -11,20 +11,9 @@ suppressPackageStartupMessages({
 source(here::here("01-chart-longevity", "R", "paths.R"))
 
 
-# ---- Directories ---------------------------------------------------------
+# ---- Shared utilities ----------------------------------------------------
 
-ensure_dirs <- function(paths) {
-  stopifnot(is.character(paths), length(paths) >= 1)
-  
-  paths <- unique(paths)
-  
-  for (p in paths) {
-    if (dir.exists(p)) next
-    dir.create(p, showWarnings = FALSE, recursive = TRUE)
-  }
-  
-  invisible(TRUE)
-}
+source(here::here("R", "common", "utils.R"))
 
 # ---- Saving helpers ------------------------------------------------------
 
@@ -84,7 +73,7 @@ COL_GRID     <- "grey92"
 COL_OUTLINE  <- "grey90"
 COL_REF_LINE <- "grey55"
 
-theme_project <- function(base_size = 12) {
+theme_longevity <- function(base_size = 12) {
   ggplot2::theme_minimal(base_size = base_size) +
     ggplot2::theme(
       plot.title = ggplot2::element_text(face = "bold", colour = COL_NEUTRAL),

@@ -7,3 +7,7 @@
 
 # renamed-aside files (safe to delete)
 *.bak
+
+# local archive of the pre-rename folder
+regression-model.zip
+regression-model/

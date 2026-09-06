@@ -408,7 +408,7 @@ p_sig <- ggplot(sig, aes(y = label)) +
     x = "Percentage change in expected chart longevity",
     y = NULL
   ) +
-  theme_project() +
+  theme_longevity() +
   theme(
     panel.grid.minor = element_blank(),
     panel.grid.major.y = element_blank(),

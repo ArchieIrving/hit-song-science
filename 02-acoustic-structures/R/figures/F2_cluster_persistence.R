@@ -50,7 +50,7 @@ p_02 <- ggplot(ts_df_02, aes(x = year, y = share, colour = cluster)) +
     x        = "Year",
     y        = "Share of songs"
   ) +
-  theme_project(base_size = BASE_SIZE) +
+  theme_acoustic(base_size = BASE_SIZE) +
   theme(
     panel.grid.minor = element_blank(),
     legend.title     = element_blank(),

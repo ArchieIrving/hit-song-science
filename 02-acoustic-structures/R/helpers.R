@@ -195,18 +195,14 @@ label_features_core <- function(x) {
   unname(feature_labels_core[x])
 }
 
-# ---- Directory helper -----------------------------------------------------
+# ---- Shared utilities -----------------------------------------------------
 
-ensure_dir <- function(path) {
-  if (!dir.exists(path)) {
-    dir.create(path, recursive = TRUE, showWarnings = FALSE)
-  }
-}
+source(here::here("R", "common", "utils.R"))
 
 # ---- Output logging helper -----------------------------------------------
 
 with_log <- function(file, expr) {
-  ensure_dir(dirname(file))
+  ensure_dirs(dirname(file))
   sink(file, type = "output")
   on.exit(sink(type = "output"), add = TRUE)
   force(expr)
@@ -251,7 +247,7 @@ log_table <- function(x, digits = 3) {
 # ---- EDA table export helper ---------------------------------------------
 
 write_eda_table <- function(x, filename, digits = 3) {
-  ensure_dir(dirname(filename))
+  ensure_dirs(dirname(filename))
   x |>
     dplyr::mutate(
       dplyr::across(where(is.numeric), ~ round(.x, digits))
@@ -261,7 +257,7 @@ write_eda_table <- function(x, filename, digits = 3) {
 
 # ---- Theme ----------------------------------------------------------------
 
-theme_project <- function(base_size = 12) {
+theme_acoustic <- function(base_size = 12) {
   theme_minimal(base_size = base_size) +
     theme(
       plot.title = element_text(face = "bold"),
@@ -277,7 +273,7 @@ save_fig <- function(plot, filename, width = 9.5, height = 6.5, dpi = 300) {
   
   ggsave(
     filename = filename,
-    plot = plot + theme_project(),
+    plot = plot + theme_acoustic(),
     width = width,
     height = height,
     dpi = dpi,

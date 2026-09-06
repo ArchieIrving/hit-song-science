@@ -19,7 +19,7 @@ source(here::here("02-acoustic-structures", "R", "paths.R"))
 source(ap("R/helpers.R"))
 
 DIR_FIG <- ap("outputs/figures")
-ensure_dir(DIR_FIG)
+ensure_dirs(DIR_FIG)
 
 # ---- Load shared inputs ---------------------------------------------------
 

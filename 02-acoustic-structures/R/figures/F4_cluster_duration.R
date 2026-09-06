@@ -37,7 +37,7 @@ p_04 <- ggplot(df_04, aes(x = weeks_on_chart, y = cluster, fill = cluster)) +
   ) +
   coord_cartesian(xlim = c(0, x_p99)) +
   scale_fill_cluster() +
-  theme_project(base_size = BASE_SIZE) +
+  theme_acoustic(base_size = BASE_SIZE) +
   theme(legend.position = "none") +
   labs(
     title = "Acoustic Structure Chart longevity",
@@ -49,7 +49,7 @@ p_04 <- ggplot(df_04, aes(x = weeks_on_chart, y = cluster, fill = cluster)) +
 
 # ---- Save ------------------------------------------------------------------
 
-ensure_dir(DIR_FIG)
+ensure_dirs(DIR_FIG)
 
 ggsave(
   filename = file.path(DIR_FIG, "04_cluster_duration.png"),

@@ -63,7 +63,7 @@ plot_corr_heatmap <- function(df, vars, label_cutoff = 0.70) {
     scale_x_discrete(labels = axis_labels) +
     scale_y_discrete(labels = axis_labels) +
     labs(x = NULL, y = NULL) +
-    theme_project() +
+    theme_longevity() +
     theme(
       axis.text.x = element_text(angle = 45, hjust = 1, size = 9),
       axis.text.y = element_text(size = 9),
@@ -111,7 +111,7 @@ run_eda <- function(df,
       x = label_from_map(outcome_var),
       y = "Number of songs"
     ) +
-    theme_project()
+    theme_longevity()
   
   save_plot("01_outcome_distribution_histogram.png", p_outcome)
   
@@ -203,7 +203,7 @@ run_eda <- function(df,
       scale_y_continuous(labels = percent_format(accuracy = 1)) +
       facet_wrap(~ variable_label, scales = "free_x", ncol = 1) +
       labs(x = NULL, y = "Proportion of songs") +
-      theme_project() +
+      theme_longevity() +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
     
     save_plot("05_musical_categorical_proportions.png", p_props, width = 9, height = 9)
@@ -256,7 +256,7 @@ run_eda <- function(df,
         x = NULL,
         y = paste0("Mean ", label_from_map(outcome_var))
       ) +
-      theme_project()
+      theme_longevity()
     
     save_plot("03_bivariate_binned_mean_main_predictors.png", p_binned, width = 12, height = 8)
   }
@@ -277,7 +277,7 @@ run_eda <- function(df,
           x = label_from_map(v),
           y = label_from_map(outcome_var)
         ) +
-        theme_project()
+        theme_longevity()
       
       save_plot(paste0("04_response_by_", v, ".png"), p_cat, width = 7.5, height = 5.5)
     }

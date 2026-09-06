@@ -84,7 +84,7 @@ p_03 <- ggplot(df_03, aes(x = cluster, y = peak_rank_med, colour = cluster)) +
     x = NULL,
     y = "Peak chart rank (1 = best)"
   ) +
-  theme_project(base_size = BASE_SIZE)
+  theme_acoustic(base_size = BASE_SIZE)
 
 # ---- Save -----------------------------------------------------------------
 

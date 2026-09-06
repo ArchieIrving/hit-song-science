@@ -15,7 +15,7 @@ cat("Pipeline run:", format(run_ts), "\n")
 cat("============================================================\n\n")
 
 source(ap("R/helpers.R"))
-invisible(lapply(c(ap("clean"), ap("outputs/eda"), ap("outputs/figures")), ensure_dir))
+invisible(lapply(c(ap("clean"), ap("outputs/eda"), ap("outputs/figures")), ensure_dirs))
 
 cat("[1/3] Running data cleaning (R/01_data_cleaning.R)...\n")
 source(ap("R/01_data_cleaning.R"))

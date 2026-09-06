@@ -1,5 +1,5 @@
 ============================================================
-Report run: 2026-09-06 06:52:30
+Report run: 2026-09-06 07:03:29
 ============================================================
 
 
@@ -58,7 +58,7 @@ N above threshold: 902 (4.4%)
 Top Cook's distances (index:value): 2783:0.009036, 2424:0.005793, 5786:0.005568, 4328:0.005098, 1411:0.004905
 
 ----- Model identity check -----
-fit_meta run_time: 2026-09-06 06:52:14.264348
+fit_meta run_time: 2026-09-06 07:03:10.93763
 nobs(m_nb): 20303
 formula(m_nb): weeks_on_chart ~ song_rank_entry + n_artists_collab + artist_prior_n_songs +      artist_avg_longevity_prior + artist_avg_peak_rank_prior +      duration_ms + acousticness + danceability + energy + instrumentalness +      liveness + loudness + speechiness + valence + tempo
 

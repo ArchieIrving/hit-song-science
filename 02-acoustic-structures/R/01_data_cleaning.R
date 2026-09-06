@@ -10,7 +10,7 @@ source(here::here("02-acoustic-structures", "R", "paths.R"))
 
 
 source(ap("R/helpers.R"))
-ensure_dir(ap("clean"))
+ensure_dirs(ap("clean"))
 
 # ---- Load inputs ----------------------------------------------------------
 
