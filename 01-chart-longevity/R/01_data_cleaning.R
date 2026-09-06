@@ -14,15 +14,19 @@ source(here::here("01-chart-longevity", "R", "paths.R"))
 
 source(ap("R/helpers.R"))
 source(ap("R/analysis_setup.R"))
+source(here::here("R", "common", "ingest_musicoset.R"))
 ensure_dirs(ap("clean"))
 
 # ---- Load inputs ----------------------------------------------------------
+# Shared ingestion reads and validates the source files; every analytical
+# decision below is this analysis's own.
 
-acoustic_features <- read_tsv(dp("raw/features/acoustic_features.csv"), show_col_types = FALSE)
-song_chart        <- read_tsv(dp("raw/popularity/song_chart.csv"), show_col_types = FALSE)
-songs             <- read_tsv(dp("raw/metadata/songs.csv"), show_col_types = FALSE)
+musicoset <- read_musicoset()
+write_processed_tables(musicoset)
 
-stopifnot(anyDuplicated(acoustic_features$song_id) == 0)
+acoustic_features <- musicoset$acoustic_features
+song_chart        <- musicoset$chart_weekly
+songs             <- musicoset$songs
 
 # ---- Restrict to songs observed from chart entry --------------------------
 
@@ -46,28 +50,14 @@ song_chart <- filter(song_chart, song_id %in% valid_song_ids)
 songs      <- filter(songs,      song_id %in% valid_song_ids)
 acoustic_features <- filter(acoustic_features, song_id %in% valid_song_ids)
 
-# ---- Parse credited artists from metadata ---------------------------------
+# ---- Credited artists -----------------------------------------------------
+# Parsing happens during shared ingestion. Restricting to valid_song_ids here
+# keeps artist history built only from songs that pass the chart-entry rule
+# above, matching the previous behaviour of parsing the already-filtered
+# songs table.
 
-# Extract Spotify artist IDs from the artists dictionary field.
-parse_artists_dict <- function(song_id_vec, artists_str_vec) {
-  map2_dfr(song_id_vec, artists_str_vec, function(sid, s) {
-    if (is.na(s) || !nzchar(s)) {
-      return(tibble(song_id = sid, artist_id = NA_character_))
-    }
-    
-    m <- str_match_all(s, "'([A-Za-z0-9]{22})'\\s*:")[[1]]
-    
-    if (nrow(m) == 0) {
-      return(tibble(song_id = sid, artist_id = NA_character_))
-    }
-    
-    tibble(song_id = sid, artist_id = m[, 2])
-  })
-}
-
-songs_artists_long <- parse_artists_dict(songs$song_id, songs$artists) |>
-  filter(!is.na(artist_id)) |>
-  distinct(song_id, artist_id)
+songs_artists_long <- dplyr::filter(musicoset$song_artists,
+                                    song_id %in% valid_song_ids)
 
 artist_lists <- songs_artists_long |>
   group_by(song_id) |>

@@ -11,3 +11,7 @@
 # local archive of the pre-rename folder
 regression-model.zip
 regression-model/
+
+# diagnostic by-products, rebuilt on every run
+data/processed/*
+!data/processed/README.md

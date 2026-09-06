@@ -10,13 +10,21 @@ source(here::here("02-acoustic-structures", "R", "paths.R"))
 
 
 source(ap("R/helpers.R"))
+source(here::here("R", "common", "ingest_musicoset.R"))
 ensure_dirs(ap("clean"))
 
 # ---- Load inputs ----------------------------------------------------------
 
-acoustic_features <- read_tsv(dp("raw/features/acoustic_features.csv"), show_col_types = FALSE)
-song_chart        <- read_tsv(dp("raw/popularity/song_chart.csv"), show_col_types = FALSE)
-songs             <- read_tsv(dp("raw/metadata/songs.csv"), show_col_types = FALSE)
+# Shared ingestion reads and validates the source files. artists = FALSE
+# because this analysis never uses the artist mapping and the parse is not
+# free. Every analytical decision below is this analysis's own.
+
+musicoset <- read_musicoset(artists = FALSE)
+write_processed_tables(musicoset)
+
+acoustic_features <- musicoset$acoustic_features
+song_chart        <- musicoset$chart_weekly
+songs             <- musicoset$songs
 
 # ---- Prepare chart table (recode + derive year) ---------------------------
 
