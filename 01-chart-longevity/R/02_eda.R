@@ -291,8 +291,6 @@ run_eda <- function(df,
   # record dispersion diagnostics for model justification
   write_lines_safe(
     c(
-      paste0("EDA run: ", format(Sys.time())),
-      "",
       paste0("N songs: ", nrow(df)),
       "",
       paste0("Outcome mean: ", round(mean_y, 2)),

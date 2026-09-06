@@ -49,7 +49,7 @@ EDA
 6 PC6           0.108   0.899
 7 PC7           0.062   0.961
 8 PC8           0.039   1    
-wrote 2.15GB in  0s, 2.15GB/s                                                                                         wrote 316.00B in  0s, 8.78MB/s                                                                                         wrote 2.15GB in  0s, 2.15GB/s                                                                                         
+
 03) Cluster diagnostics
 -----------------------
 # A tibble: 9 × 2
@@ -76,7 +76,7 @@ EDA
 7     8         0.233
 8     9         0.234
 9    10         0.239
-wrote 2.15GB in  0s, 2.15GB/s                                                                                         
+
 04) PCA sensitivity
 -------------------
 
@@ -90,7 +90,7 @@ EDA
 3 Speech-dominant        1572
 4 Instrumental-dominant   979
 5 Mellow acoustic        4853
-wrote 2.15GB in  0s, 2.15GB/s                                                                                         wrote 2.15GB in  0s, 2.15GB/s                                                                                         # A tibble: 5 × 6
+# A tibble: 5 × 6
   cluster                  PC1    PC2    PC3    PC4    PC5
   <fct>                  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
 1 Melodic-positive      -0.793 -0.551 -0.18  -0.291  0.357

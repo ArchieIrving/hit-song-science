@@ -201,10 +201,17 @@ source(here::here("R", "common", "utils.R"))
 
 # ---- Output logging helper -----------------------------------------------
 
+# Progress meters report machine-dependent throughput. Inside a sink they are
+# captured into the log file, so the log would differ between runs on identical
+# data. Suppressed here and restored when the log is closed.
 with_log <- function(file, expr) {
   ensure_dirs(dirname(file))
+  old_opts <- options(readr.show_progress = FALSE, vroom.show_progress = FALSE)
   sink(file, type = "output")
-  on.exit(sink(type = "output"), add = TRUE)
+  on.exit({
+    sink(type = "output")
+    options(old_opts)
+  }, add = TRUE)
   force(expr)
 }
 

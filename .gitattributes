@@ -1,0 +1,23 @@
+# Line endings.
+#
+# Normalise line endings in the repository, so diffs show content changes
+# rather than which editor last saved a file. LF is enforced explicitly for
+# code and for text that is meant to be reviewed as a diff.
+* text=auto
+
+*.R            text eol=lf
+*.Rproj        text eol=lf
+*.md           text eol=lf
+*.csv          text eol=lf
+*.txt          text eol=lf
+.gitignore     text eol=lf
+.gitattributes text eol=lf
+.here          text eol=lf
+LICENSE        text eol=lf
+
+# Preserve redistributed source-data bytes exactly.
+data/raw/** -text
+
+*.rds binary
+*.png binary
+*.pdf binary

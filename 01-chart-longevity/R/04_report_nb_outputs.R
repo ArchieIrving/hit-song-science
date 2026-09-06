@@ -222,7 +222,7 @@ top_pairs <- if (length(top_idx) == 0) "<none>" else {
 
 lines <- c(
   "============================================================",
-  paste0("Report run: ", format(Sys.time())),
+  "Negative binomial model report",
   "============================================================",
   "",
   "",
@@ -270,7 +270,6 @@ lines <- c(
 lines <- c(
   lines,
   "----- Model identity check -----",
-  paste0("fit_meta run_time: ", fit_meta$run_time),
   paste0("nobs(m_nb): ", stats::nobs(m_nb)),
   paste0("formula(m_nb): ", paste(deparse(stats::formula(m_nb)), collapse = " ")),
   ""

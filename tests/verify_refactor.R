@@ -7,6 +7,7 @@
 # Compares sentinel values scraped from the current outputs against
 # tests/expected_results.csv, which records the pre-refactor baseline.
 # Refactors should change plumbing, not results: every check must pass.
+# Any failure raises an error, so a failed run cannot be mistaken for a pass.
 
 suppressPackageStartupMessages({
   library(readr)
@@ -122,9 +123,10 @@ for (i in seq_len(nrow(results))) {
 
 n_fail <- sum(!results$pass)
 
-# On failure, name the artefact the value was read from. Most failures are
-# extraction or baseline problems rather than genuine analytical changes, and
-# the source path is the fastest way to tell which.
+# On failure, name the artefact each value was read from. A failure means the
+# observed value, the way it was extracted, and the recorded baseline no longer
+# agree; it does not on its own establish which of the three is wrong. The
+# source path is the fastest way to tell.
 if (n_fail > 0) {
   cat("\n------------------------------------------------------------\n")
   cat("Failure detail\n")
@@ -140,12 +142,19 @@ if (n_fail > 0) {
 }
 
 cat("\n------------------------------------------------------------\n")
-if (n_fail == 0) {
-  cat("All ", nrow(results), " checks passed. The analysis is unchanged.\n", sep = "")
-} else {
-  cat(n_fail, " of ", nrow(results),
-      " checks FAILED. The refactor altered the analysis; investigate before continuing.\n", sep = "")
+if (n_fail > 0) {
+  cat("Verification FAILED: ", n_fail, " of ", nrow(results), " checks did not match.\n", sep = "")
+  cat("------------------------------------------------------------\n")
+  stop(
+    "Verification failed for: ",
+    paste(results$metric[!results$pass], collapse = ", "),
+    ". Compare each value against the source artefact listed above before ",
+    "assuming the analysis itself changed.",
+    call. = FALSE
+  )
 }
+
+cat("All ", nrow(results), " checks passed. The analysis is unchanged.\n", sep = "")
 cat("------------------------------------------------------------\n")
 
 invisible(results)

@@ -1,5 +1,5 @@
 metric,value,tolerance,source
-a1_n,20303,0,01-chart-longevity/outputs/models/model_summary.txt
+a1_n,20303,0,01-chart-longevity/outputs/descriptives/eda_summary.txt
 a1_outcome_mean,12.3,0.05,01-chart-longevity/outputs/descriptives/eda_summary.txt
 a1_outcome_variance,67.59,0.05,01-chart-longevity/outputs/descriptives/eda_summary.txt
 a1_poisson_dispersion,51.34,0.05,01-chart-longevity/outputs/models/model_summary.txt

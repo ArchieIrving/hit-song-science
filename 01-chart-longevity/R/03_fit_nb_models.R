@@ -91,7 +91,6 @@ models <- list(
 save_rds_safe(models, PATH_MODELS)
 
 fit_meta <- list(
-  run_time = Sys.time(),
   n = nrow(model_df_scaled),
   dropped_na_n = nrow(song_df) - nrow(model_df_scaled),
   scale_vars = scale_vars,
