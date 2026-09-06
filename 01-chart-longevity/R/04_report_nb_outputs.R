@@ -195,7 +195,7 @@ overdisp_line <- paste0(
 )
 
 ic_tbl <- tibble::tibble(
-  Model = c("Poisson", "NB main (frozen)", "NB + categoricals"),
+  Model = c("Poisson", "NB main", "NB + categoricals"),
   AIC   = c(AIC(m_pois), AIC(m_nb), AIC(m_nb_c)),
   BIC   = c(BIC(m_pois), BIC(m_nb), BIC(m_nb_c))
 )

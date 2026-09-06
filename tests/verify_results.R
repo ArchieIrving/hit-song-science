@@ -1,13 +1,13 @@
-# tests/verify_refactor.R ---------------------------------------------------
+# tests/verify_results.R ----------------------------------------------------
 # Checks that a pipeline run still reproduces the same analysis.
 #
 # Usage, after running run_all.R:
-#   source("tests/verify_refactor.R")
+#   source("tests/verify_results.R")
 #
 # Compares sentinel values scraped from the current outputs against
-# tests/expected_results.csv, which records the pre-refactor baseline.
-# Refactors should change plumbing, not results: every check must pass.
-# Any failure raises an error, so a failed run cannot be mistaken for a pass.
+# tests/expected_results.csv, which records the reference baseline. Changes to
+# the code should change plumbing, not results: every check must pass. Any
+# failure raises an error, so a failed run cannot be mistaken for a pass.
 
 suppressPackageStartupMessages({
   library(readr)
@@ -46,9 +46,9 @@ vif_of <- function(term) {
 }
 
 # The model-comparison block is "<label>  <AIC>  <BIC>". Labels contain spaces
-# and regex metacharacters ("NB main (frozen)", "NB + categoricals"), so match
-# the label literally and take the first decimal number on the line as the AIC,
-# rather than relying on a fixed whitespace-field position.
+# and regex metacharacters ("NB + categoricals"), so match the label literally
+# and take the first decimal number on the line as the AIC, rather than relying
+# on a fixed whitespace-field position.
 aic_of <- function(label) {
   hit <- model_summary[startsWith(model_summary, label)][1]
   if (is.na(hit)) return(NA_real_)
@@ -107,7 +107,7 @@ results <- expected |>
   )
 
 cat("\n============================================================\n")
-cat("Refactor verification\n")
+cat("Pipeline verification\n")
 cat("============================================================\n\n")
 
 for (i in seq_len(nrow(results))) {
@@ -154,7 +154,7 @@ if (n_fail > 0) {
   )
 }
 
-cat("All ", nrow(results), " checks passed. The analysis is unchanged.\n", sep = "")
+cat("All ", nrow(results), " checks passed.\n", sep = "")
 cat("------------------------------------------------------------\n")
 
 invisible(results)

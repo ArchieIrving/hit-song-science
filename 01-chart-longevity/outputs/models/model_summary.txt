@@ -23,7 +23,7 @@ Dispersion test (Poisson): statistic = 51.34, p < 0.001
 Model                                 AIC          BIC
 --------------------------------------------------------
 Poisson                         176914.95    177160.43
-NB main (frozen)                135461.28    135595.90
+NB main                         135461.28    135595.90
 NB + categoricals               135436.12    135689.51
 
 ----- Likelihood ratio test (nested NB models) -----

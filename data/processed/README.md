@@ -1,6 +1,6 @@
 # Processed base tables
 
-Files written here are **diagnostic by-products**, not pipeline inputs.
+Files written here are **inspectable generated base tables**, not pipeline inputs.
 
 `R/common/ingest_musicoset.R` reads and validates the raw MusicOSet files and
 returns four tables at their natural grains. `write_processed_tables()` then

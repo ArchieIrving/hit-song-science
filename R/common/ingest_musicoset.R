@@ -4,11 +4,13 @@
 # This layer reads and validates. It does not decide anything analytical:
 # chart-entry rules, tempo filtering, complete-case exclusions, artist-history
 # construction and yearly presence all stay inside the analysis that needs
-# them, because the two analyses legitimately keep different samples.
+# them, because the two analyses retain analysis-specific preparation rules and
+# output schemas.
 #
 # Reading is separated from materialisation. read_musicoset() is a pure
 # reader; write_processed_tables() is an explicit side effect producing
-# diagnostic copies that are never read back as pipeline inputs.
+# inspectable generated base tables that are never read back as pipeline
+# inputs.
 #
 # Calls are namespace-qualified throughout: analysis 1 attaches MASS, which
 # masks dplyr::select, and shared infrastructure must not depend on whatever
@@ -77,9 +79,10 @@ parse_song_artists <- function(songs) {
 #   chart_weekly      one row per song and chart week
 #   song_artists      one row per song and credited artist
 #
-# Row order is preserved deliberately. Analysis 2's seeded k-means can give a
-# different solution if its input ordering changes, so reordering here would
-# be a statistical change disguised as a refactor.
+# Row order is preserved deliberately. Analysis 2's k-means is seeded, so a
+# change to the input ordering can produce a different clustering solution.
+# Reordering here is therefore a change to the analysis and needs to be
+# reviewed as one, not treated as a neutral tidy-up.
 #
 # artists = FALSE skips the parse for analyses that never use it.
 read_musicoset <- function(data_dir = here::here("data", "raw"), artists = TRUE) {
@@ -123,7 +126,7 @@ read_musicoset <- function(data_dir = here::here("data", "raw"), artists = TRUE)
   )
 }
 
-# ---- Materialisation (by-product only) ------------------------------------
+# ---- Materialisation (inspectable copies only) ----------------------------
 
 # Writes the base tables to data/processed/ so they can be inspected. These
 # are never read back: every run rebuilds from data/raw/, so there is no

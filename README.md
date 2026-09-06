@@ -155,7 +155,7 @@ Then run both analyses and check the results against the recorded baseline:
 
 ```r
 source("run_all.R")                # both analyses end to end, about two minutes
-source("tests/verify_refactor.R")  # 27 sentinel checks, errors if any fail
+source("tests/verify_results.R")   # 27 sentinel checks, errors if any fail
 ```
 
 Each analysis also runs on its own from the same project:
