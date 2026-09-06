@@ -1,45 +1,149 @@
-# Modelling Song Chart Longevity
+# Hit Song Science
 
-## Project Overview
+**Why does research keep disagreeing about what makes a successful song?**
 
-The aim of this project was to extend research in *Hit Song Science* by adopting an explanatory modelling approach to musical success. Rather than treating success as a binary outcome (chart entry versus non-entry), the study operationalised success as chart longevity, measured by the number of weeks a song remained on the *Billboard* charts.
+Using 20,000+ Billboard songs and Spotify-derived audio features, this project tests whether some of Hit Song Science's inconsistency comes from how success and musical characteristics are represented. Two reproducible R analyses examine chart longevity using Negative Binomial regression and acoustic structure using PCA and clustering.
 
-## Data and Methods
+## Project overview
 
-The analysis used data from MusicOSet, an open, curated dataset integrating *Billboard* chart performance with song-level metadata and Spotify-derived acoustic features. The dataset contains 20,405 songs from the U.S. popular music industry spanning 1962–2018.
+| | |
+|---|---|
+| **Dataset** | 20,000+ Billboard songs with Spotify-derived audio features |
+| **Language** | R |
+| **Analysis 1** | Negative Binomial regression, diagnostics, feature engineering |
+| **Analysis 2** | PCA, k-means clustering, sensitivity analysis, data visualisation |
+| **Focus** | Statistical modelling, dimensionality reduction, reproducible analysis |
+| **Outputs** | Automated figures, model summaries, cleaned datasets and academic reports |
 
-To examine sustained chart presence, a Negative Binomial regression model was estimated to address two research questions:
+### Key findings
 
-- **RQ1:** To what extent do artist history, prior popularity, and exposure-related factors explain sustained chart presence?  
-- **RQ2:** What role do song-level characteristics play in shaping sustained chart presence, conditional on artist and exposure factors?
+- **Artist history dominated acoustic features:** a five-week increase in prior average chart longevity was associated with ~**17% greater expected longevity**.
+- **Acoustic features formed five interpretable profiles** whose prevalence changed substantially over time.
+- **Analytical choices changed the picture:** chart persistence revealed patterns obscured by peak-based measures, while grouping correlated acoustic features exposed broader structure.
 
-## Key Findings
+[Analysis 1: Chart longevity →](01-chart-longevity/) ·
+[Analysis 2: Acoustic structures →](02-acoustic-structures/)
 
-The results indicate that artist prior chart longevity is the strongest positive predictor of weeks on chart, while entry rank exhibits a smaller but positive association. In contrast, prior peak chart position and repeated chart exposure are negatively associated with chart longevity, suggesting diminishing returns to peak-oriented or repeated success.
+---
 
-Song-level acoustic features were statistically significant but exhibited **modest effect sizes**. Higher danceability and loudness were positively associated with chart longevity, whereas greater speechiness, acousticness, liveness, instrumentalness, and energy were negatively associated. Overall, the findings reinforce long-standing conclusions in Hit Song Science that audio features play a limited explanatory role relative to artist history and exposure dynamics.
+## 1. Redefining musical success
 
-## How to Run the Analysis
+Most Hit Song Science research focuses on static outcomes such as whether a song charts or how high it peaks.
 
-### Requirements
-- R (version 4.x)
-- R packages: tidyverse, scico, MASS, AER, performance, DHARMa, broom
+That collapses an important distinction. A song that disappears after one week and a song that remains on the chart for a year have both simply "charted".
 
-### How to Run the Analysis
+The first analysis instead models **chart longevity — the number of weeks a song remains on the chart**.
 
-1. Clone or download this repository to your local machine and open the project in R or RStudio.
+A Negative Binomial model compares two broad sources of explanation:
 
-2. Set the project root directory as your working directory. The project root is the top-level folder containing the `R/`, `raw/`, `clean/`, and `outputs/` directories.
+- **Artist history and prior exposure**, including previous chart persistence and prior appearances.
+- **Song characteristics**, including acoustic features such as danceability, energy, loudness and speechiness.
 
-3. Ensure all required R packages are installed (see the package loading statements at the top of the scripts).
+Artist history is much more strongly associated with sustained chart performance than individual acoustic characteristics.
 
-4. Run the full analysis pipeline from the project root using:
+A five-week increase in an artist's prior average chart longevity is associated with approximately **17% greater expected longevity** for the next song. Most practically scaled acoustic effects are much smaller.
+
+### Percentage change in expected chart longevity by predictor
+
+![Coefficient plot comparing artist-history and acoustic predictors](01-chart-longevity/outputs/figures/nb_effects_percent_significant_only.png)
+
+*Note: MusicOSet uses an inverted chart-rank score, so higher values indicate better chart performance.*
+
+The result is not that audio characteristics are irrelevant. Several show statistically detectable associations with longevity, but their effects are modest once artist history and exposure-related factors are taken into account.
+
+**[Explore the chart-longevity analysis →](01-chart-longevity/)**
+
+---
+
+## 2. Acoustic structures, not isolated features
+
+The second analysis asks why acoustic-feature findings are so unstable across studies.
+
+Features such as tempo, energy, danceability and acousticness are often entered into models separately. But these characteristics overlap with one another and may partly reflect broader genre and production conventions.
+
+Rather than modelling them independently, this analysis uses **principal component analysis followed by clustering** to identify broader acoustic structures.
+
+Five interpretable profiles emerge:
+
+- Instrumental-dominant
+- Speech-dominant
+- Mellow acoustic
+- High-tempo vocal
+- Melodic-positive
+
+Their prevalence also changes substantially over time.
+
+### Acoustic-structure prevalence among charting songs
+
+![Line chart of acoustic-profile shares from the 1960s to 2018](02-acoustic-structures/outputs/figures/02_cluster_persistence.png)
+
+This matters because a dataset covering several decades is not sampling from one stable musical environment. It pools periods with very different acoustic compositions.
+
+A relationship estimated across the entire period may therefore conceal substantial historical variation.
+
+The clusters also relate differently to alternative definitions of success. Peak chart positions overlap heavily between acoustic profiles, while clearer differences emerge in the distributions of **chart longevity**.
+
+This suggests that acoustic structure may be more informative about **persistence after chart entry** than about initial peak performance.
+
+The changing prevalence of these structures provides one plausible mechanism for inconsistent feature-level effects across datasets and time periods.
+
+**[Explore the acoustic-structure analysis →](02-acoustic-structures/)**
+
+---
+
+## Overall takeaway
+
+The analyses suggest that unstable Hit Song Science findings may partly reflect analytical choices: binary success measures discard persistence, correlated acoustic features contain higher-level structure, and pooled historical datasets combine changing musical environments. These are observational analyses, so they do not establish that musical content causes commercial success, and key industry mechanisms such as promotion and label support are not observed in the data.
+
+---
+
+## Repository structure
+
+```text
+.
+├── data/
+│   └── raw/                   # Shared MusicOSet source files
+│
+├── 01-chart-longevity/        # Modelling sustained chart presence
+│   ├── R/
+│   ├── clean/
+│   └── outputs/
+│
+├── 02-acoustic-structures/    # PCA and clustering of acoustic features
+│   ├── R/
+│   ├── clean/
+│   └── outputs/
+│
+└── writeups/                  # Full academic reports
+```
+
+Each analysis has its own README containing the methodology, diagnostics, results, figure rationale and reproduction instructions.
+
+## Data
+
+Both analyses use MusicOSet, an open dataset linking Billboard chart history with song metadata and Spotify-derived audio features.
+
+The source data contain more than 20,000 songs spanning several decades up to 2018. Analytical samples differ slightly between the two analyses after cleaning and exclusion criteria are applied.
+
+MusicOSet is released under CC BY 4.0.
+
+## Reproducing the analyses
+
+Both analyses are written in **R** and can be run independently. Open the corresponding `.Rproj` file in either analysis directory, then run:
 
 ```r
 source("R/00_run_all.R")
 ```
 
-Running `00_run_all.R` executes the entire analysis pipeline end-to-end. This includes data cleaning and aggregation, exploratory data analysis, model estimation, and the generation of tables, figures, and diagnostics. All outputs are written automatically to the `clean/` and `outputs/` directories. Progress messages are printed to the console during execution.
+See the individual analysis READMEs for package requirements, processing steps and generated outputs:
 
+- [01 — Redefining Musical Success: Chart Longevity](01-chart-longevity/)
+- [02 — Acoustic Structures, Not Features](02-acoustic-structures/)
 
+## Licence
 
+Code in this repository is released under the MIT Licence.
+
+Dataset licensing remains with the original MusicOSet authors under CC BY 4.0.
+
+Completed as part of the MSc Data Science programme at the University of Sheffield.

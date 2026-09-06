@@ -1,0 +1,6 @@
+# R / RStudio session and cache files
+.Rproj.user/
+.Rhistory
+.RData
+.RDataTmp*
+.Rproj.user

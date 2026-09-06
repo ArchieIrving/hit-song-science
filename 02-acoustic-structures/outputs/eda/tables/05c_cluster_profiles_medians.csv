@@ -1,0 +1,6 @@
+cluster,acousticness,danceability,energy,valence,tempo,speechiness,liveness,instrumentalness
+Melodic-positive,0.111,0.688,0.692,0.784,114.58,0.041,0.108,0
+High-tempo vocal,0.074,0.511,0.764,0.585,141.252,0.045,0.228,0
+Speech-dominant,0.082,0.741,0.681,0.599,101.97,0.266,0.159,0
+Instrumental-dominant,0.134,0.632,0.567,0.625,120.01,0.04,0.113,0.787
+Mellow acoustic,0.575,0.506,0.408,0.378,107.989,0.032,0.125,0

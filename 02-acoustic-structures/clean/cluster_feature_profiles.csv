@@ -1,0 +1,41 @@
+cluster,feature,mean_z
+Melodic-positive,acousticness,-0.3269487660980361
+Melodic-positive,danceability,0.6054233819997149
+Melodic-positive,energy,0.29885234379340986
+Melodic-positive,instrumentalness,-0.1995169619948031
+Melodic-positive,liveness,-0.3001844169865826
+Melodic-positive,speechiness,-0.22017524369217495
+Melodic-positive,tempo,-0.2480664858011121
+Melodic-positive,valence,0.6125409524920038
+High-tempo vocal,acousticness,-0.4195193101007461
+High-tempo vocal,danceability,-0.6443094257877993
+High-tempo vocal,energy,0.6135523056166331
+High-tempo vocal,instrumentalness,-0.21337831428808096
+High-tempo vocal,liveness,0.608211188642702
+High-tempo vocal,speechiness,-0.1287006919395269
+High-tempo vocal,tempo,0.828920304906791
+High-tempo vocal,valence,-0.12225788869910038
+Speech-dominant,acousticness,-0.39073912629634705
+Speech-dominant,danceability,0.8241948358145392
+Speech-dominant,energy,0.2480468515038087
+Speech-dominant,instrumentalness,-0.25737410206167394
+Speech-dominant,liveness,0.16615306644885944
+Speech-dominant,speechiness,2.9090789499530207
+Speech-dominant,tempo,-0.15795335753407458
+Speech-dominant,valence,-0.11399666451435829
+Instrumental-dominant,acousticness,0.10154948489679384
+Instrumental-dominant,danceability,0.07577306857871903
+Instrumental-dominant,energy,-0.3406938577666706
+Instrumental-dominant,instrumentalness,4.161310187611951
+Instrumental-dominant,liveness,-0.15469553070728032
+Instrumental-dominant,speechiness,-0.24677677589967548
+Instrumental-dominant,tempo,0.03433888771886109
+Instrumental-dominant,valence,-0.0632760588344667
+Mellow acoustic,acousticness,1.0647854507774557
+Mellow acoustic,danceability,-0.6805952314520075
+Mellow acoustic,energy,-1.1108604918390386
+Mellow acoustic,instrumentalness,-0.2123604397233014
+Mellow acoustic,liveness,-0.10487183986280602
+Mellow acoustic,speechiness,-0.39595106525364543
+Mellow acoustic,tempo,-0.3398923104457751
+Mellow acoustic,valence,-0.8664726100758153
