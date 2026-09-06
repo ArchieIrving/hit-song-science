@@ -49,7 +49,7 @@ EDA
 6 PC6           0.108   0.899
 7 PC7           0.062   0.961
 8 PC8           0.039   1    
-wrote 2.15GB in  0s, 2.15GB/s                                                                                         wrote 316.00B in  0s, 9.02MB/s                                                                                         wrote 2.15GB in  0s, 2.15GB/s                                                                                         
+wrote 2.15GB in  0s, 2.15GB/s                                                                                         wrote 316.00B in  0s, 8.13MB/s                                                                                         wrote 2.15GB in  0s, 2.15GB/s                                                                                         
 03) Cluster diagnostics
 -----------------------
 # A tibble: 9 × 2

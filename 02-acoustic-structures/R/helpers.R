@@ -149,7 +149,7 @@ pca_ve_labels <- function(ve, k = 5) {
 # Pure helper (no IO). Useful to keep PCA outputs consistent across scripts.
 
 fit_pca_core <- function(df, vars = vars_core, k_pcs = K_PCS_CLUSTER) {
-  X <- df %>% select(all_of(vars)) %>% as.data.frame()
+  X <- df %>% dplyr::select(all_of(vars)) %>% as.data.frame()
   
   pca <- prcomp(X, center = TRUE, scale. = TRUE)
   

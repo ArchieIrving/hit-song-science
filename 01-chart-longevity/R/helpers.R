@@ -8,6 +8,8 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(readr)
 })
+source(here::here("01-chart-longevity", "R", "paths.R"))
+
 
 # ---- Directories ---------------------------------------------------------
 
@@ -50,7 +52,7 @@ save_rds_safe <- function(object, path) {
 # Save a ggplot with consistent export settings.
 save_plot <- function(filename,
                       plot_obj,
-                      dir = "outputs/figures",
+                      dir = ap("outputs/figures"),
                       width = 7,
                       height = 5,
                       dpi = 300,

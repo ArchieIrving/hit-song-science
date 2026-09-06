@@ -13,21 +13,23 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(cluster)
 })
+source(here::here("02-acoustic-structures", "R", "paths.R"))
 
-source("R/helpers.R")
 
-DIR_EDA <- "outputs/eda"
+source(ap("R/helpers.R"))
+
+DIR_EDA <- ap("outputs/eda")
 DIR_EDA_TABLES <- file.path(DIR_EDA, "tables")
 
 ensure_dir(DIR_EDA)
 ensure_dir(DIR_EDA_TABLES)
 
-song_df <- read_csv("clean/song_df.csv", show_col_types = FALSE)
+song_df <- read_csv(ap("clean/song_df.csv"), show_col_types = FALSE)
 
 # ---- Local helper: PCA + k-means projection (EDA only) --------------------
 
 make_pca_plot <- function(df, vars, k_clusters, title, out_file) {
-  X <- df %>% select(all_of(vars)) %>% as.data.frame()
+  X <- df %>% dplyr::select(all_of(vars)) %>% as.data.frame()
   pca <- prcomp(X, center = TRUE, scale. = TRUE)
   
   k_pcs <- min(K_PCS_CLUSTER, ncol(pca$x))
@@ -130,14 +132,14 @@ with_log(file.path(DIR_EDA, "eda_log.txt"), {
   
   log_table(eda_02_var, digits = 3)
   
-  saveRDS(pca_core, "clean/pca_core.rds")
-  write_eda_table(eda_02_var, "clean/pca_variance.csv", digits = 6)
+  saveRDS(pca_core, ap("clean/pca_core.rds"))
+  write_eda_table(eda_02_var, ap("clean/pca_variance.csv"), digits = 6)
   
   loadings_df <- as.data.frame(pca_core$rotation) %>%
     tibble::rownames_to_column("feature") %>%
     pivot_longer(-feature, names_to = "PC", values_to = "loading")
   
-  write_eda_table(loadings_df, "clean/pca_loadings.csv", digits = 6)
+  write_eda_table(loadings_df, ap("clean/pca_loadings.csv"), digits = 6)
   
   # ------------------------------------------------------------------------
   # 03) Cluster diagnostics
@@ -213,7 +215,7 @@ with_log(file.path(DIR_EDA, "eda_log.txt"), {
   )
   
   eda_df <- song_df %>%
-    select(all_of(vars_core)) %>%
+    dplyr::select(all_of(vars_core)) %>%
     mutate(cluster = km_final$cluster) %>%
     apply_cluster_labels(label_map_final)
   
@@ -261,7 +263,7 @@ song_df_clustered <- song_df %>%
   mutate(cluster = km_final$cluster) %>%
   apply_cluster_labels(label_map_final)
 
-write_csv(song_df_clustered, "clean/song_df_clustered.csv")
+write_csv(song_df_clustered, ap("clean/song_df_clustered.csv"))
 
 # --------------------------------------------------------------------------
 # 07) Cluster feature profiles (long; figures)
@@ -276,6 +278,6 @@ cluster_profile_df <- eda_df_scaled %>%
   group_by(cluster, feature) %>%
   summarise(mean_z = mean(value_z, na.rm = TRUE), .groups = "drop")
 
-write_csv(cluster_profile_df, "clean/cluster_feature_profiles.csv")
+write_csv(cluster_profile_df, ap("clean/cluster_feature_profiles.csv"))
 
 message("EDA complete.")

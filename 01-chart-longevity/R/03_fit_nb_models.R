@@ -10,13 +10,15 @@ suppressPackageStartupMessages({
   library(MASS) # glm.nb (masks dplyr::select())
   library(AER)  # dispersiontest
 })
+source(here::here("01-chart-longevity", "R", "paths.R"))
 
-source("R/analysis_setup.R")
-source("R/helpers.R")
+
+source(ap("R/analysis_setup.R"))
+source(ap("R/helpers.R"))
 
 # ---- Output paths ---------------------------------------------------------
 
-DIR_MODELS  <- "outputs/models"
+DIR_MODELS  <- ap("outputs/models")
 PATH_MODELS <- file.path(DIR_MODELS, "all_models.rds")
 PATH_META   <- file.path(DIR_MODELS, "model_fit_meta.rds")
 
@@ -40,7 +42,7 @@ f_pois <- f_cat
 
 # ---- Data -----------------------------------------------------------------
 
-song_df <- read_csv("clean/song_df.csv", show_col_types = FALSE)
+song_df <- read_csv(ap("clean/song_df.csv"), show_col_types = FALSE)
 song_df <- encode_factors(song_df)
 
 model_vars <- all.vars(f_pois)

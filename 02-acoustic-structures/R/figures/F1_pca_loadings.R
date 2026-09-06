@@ -30,7 +30,7 @@ feature_labels <- c(
 # ---- Data preparation ------------------------------------------------------
 
 cluster_profile_df <- read_csv(
-  "clean/cluster_feature_profiles.csv",
+  ap("clean/cluster_feature_profiles.csv"),
   show_col_types = FALSE
 )
 

@@ -9,16 +9,18 @@ suppressPackageStartupMessages({
   library(stringr)
   library(purrr)
 })
+source(here::here("01-chart-longevity", "R", "paths.R"))
 
-source("R/helpers.R")
-source("R/analysis_setup.R")
-ensure_dirs("clean")
+
+source(ap("R/helpers.R"))
+source(ap("R/analysis_setup.R"))
+ensure_dirs(ap("clean"))
 
 # ---- Load inputs ----------------------------------------------------------
 
-acoustic_features <- read_tsv("../data/raw/features/acoustic_features.csv", show_col_types = FALSE)
-song_chart        <- read_tsv("../data/raw/popularity/song_chart.csv", show_col_types = FALSE)
-songs             <- read_tsv("../data/raw/metadata/songs.csv", show_col_types = FALSE)
+acoustic_features <- read_tsv(dp("raw/features/acoustic_features.csv"), show_col_types = FALSE)
+song_chart        <- read_tsv(dp("raw/popularity/song_chart.csv"), show_col_types = FALSE)
+songs             <- read_tsv(dp("raw/metadata/songs.csv"), show_col_types = FALSE)
 
 stopifnot(anyDuplicated(acoustic_features$song_id) == 0)
 
@@ -216,5 +218,5 @@ stopifnot(anyDuplicated(song_df$song_id) == 0)
 stopifnot(all(song_df$weeks_on_chart >= 1))
 stopifnot(all(song_df$weeks_on_chart == round(song_df$weeks_on_chart)))
 
-write_csv(song_df, "clean/song_df.csv")
+write_csv(song_df, ap("clean/song_df.csv"))
 message("Data cleaning complete: clean/song_df.csv")

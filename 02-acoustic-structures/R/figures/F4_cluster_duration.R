@@ -8,7 +8,7 @@ suppressPackageStartupMessages({
   library(ggridges)
 })
 
-source("R/helpers.R")
+source(ap("R/helpers.R"))
 
 WIDTH_04  <- 12
 HEIGHT_04 <- 7

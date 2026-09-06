@@ -13,23 +13,25 @@ suppressPackageStartupMessages({
   library(patchwork)
   library(ggbeeswarm)
 })
+source(here::here("02-acoustic-structures", "R", "paths.R"))
 
-source("R/helpers.R")
 
-DIR_FIG <- "outputs/figures"
+source(ap("R/helpers.R"))
+
+DIR_FIG <- ap("outputs/figures")
 ensure_dir(DIR_FIG)
 
 # ---- Load shared inputs ---------------------------------------------------
 
-song_df <- readr::read_csv("clean/song_df_clustered.csv", show_col_types = FALSE)
+song_df <- readr::read_csv(ap("clean/song_df_clustered.csv"), show_col_types = FALSE)
 
 
-pca_core <- readRDS("clean/pca_core.rds")
+pca_core <- readRDS(ap("clean/pca_core.rds"))
 
-pca_variance <- readr::read_csv("clean/pca_variance.csv", show_col_types = FALSE)
-pca_loadings <- readr::read_csv("clean/pca_loadings.csv", show_col_types = FALSE)
+pca_variance <- readr::read_csv(ap("clean/pca_variance.csv"), show_col_types = FALSE)
+pca_loadings <- readr::read_csv(ap("clean/pca_loadings.csv"), show_col_types = FALSE)
 
-cluster_profile_df <- read_csv("clean/cluster_feature_profiles.csv", show_col_types = FALSE)
+cluster_profile_df <- read_csv(ap("clean/cluster_feature_profiles.csv"), show_col_types = FALSE)
 
 # ---- Figure-wide constants ------------------------------------------------
 # Keep figure scripts free of hard-coded settings.
@@ -49,9 +51,9 @@ CLUSTER_LEVELS_FIG <- CLUSTER_LEVELS
 # - save to DIR_FIG
 # - not read data again
 
-source("R/figures/F1_pca_loadings.R")
-source("R/figures/F2_cluster_persistence.R")
-source("R/figures/F3_cluster_rankings.R")
-source("R/figures/F4_cluster_duration.R")
+source(ap("R/figures/F1_pca_loadings.R"))
+source(ap("R/figures/F2_cluster_persistence.R"))
+source(ap("R/figures/F3_cluster_rankings.R"))
+source(ap("R/figures/F4_cluster_duration.R"))
 
 message("Figures complete. Outputs written to outputs/figures/")

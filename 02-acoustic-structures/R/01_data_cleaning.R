@@ -6,15 +6,17 @@ suppressPackageStartupMessages({
   library(dplyr)
   library(readr)
 })
+source(here::here("02-acoustic-structures", "R", "paths.R"))
 
-source("R/helpers.R")
-ensure_dir("clean")
+
+source(ap("R/helpers.R"))
+ensure_dir(ap("clean"))
 
 # ---- Load inputs ----------------------------------------------------------
 
-acoustic_features <- read_tsv("../data/raw/features/acoustic_features.csv", show_col_types = FALSE)
-song_chart        <- read_tsv("../data/raw/popularity/song_chart.csv", show_col_types = FALSE)
-songs             <- read_tsv("../data/raw/metadata/songs.csv", show_col_types = FALSE)
+acoustic_features <- read_tsv(dp("raw/features/acoustic_features.csv"), show_col_types = FALSE)
+song_chart        <- read_tsv(dp("raw/popularity/song_chart.csv"), show_col_types = FALSE)
+songs             <- read_tsv(dp("raw/metadata/songs.csv"), show_col_types = FALSE)
 
 # ---- Prepare chart table (recode + derive year) ---------------------------
 
@@ -64,12 +66,12 @@ song_df <- song_chart_recoded |>
   rename(song_rank_final = rank_score) |>
   left_join(
     songs |>
-      select(song_id, song_name, song_type, explicit),
+      dplyr::select(song_id, song_name, song_type, explicit),
     by = "song_id"
   ) |>
   left_join(
     acoustic_features |>
-      select(
+      dplyr::select(
         song_id, duration_ms,
         acousticness, danceability, energy, instrumentalness,
         liveness, loudness, speechiness, valence, tempo
@@ -81,7 +83,7 @@ song_df <- song_chart_recoded |>
     song_year_info,
     by = "song_id"
   ) |>
-  select(
+  dplyr::select(
     song_id, song_name, song_type, explicit,
     entry_year, exit_year, n_years_on_chart, years_on_chart,
     weeks_on_chart,
@@ -93,5 +95,5 @@ song_df <- song_chart_recoded |>
   ) |>
   filter(if_all(everything(), ~ !is.na(.)))
 
-write_csv(song_df, "clean/song_df.csv")
+write_csv(song_df, ap("clean/song_df.csv"))
 message("Data cleaning complete: clean/song_df.csv")

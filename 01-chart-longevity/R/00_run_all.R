@@ -6,29 +6,31 @@
 
 
 options(tibble.width = Inf, scipen = 999)
+source(here::here("01-chart-longevity", "R", "paths.R"))
+
 
 run_ts <- Sys.time()
 cat("============================================================\n")
 cat("Pipeline run:", format(run_ts), "\n")
 cat("============================================================\n\n")
 
-source("R/helpers.R")
-ensure_dirs(c("clean", "outputs/figures", "outputs/descriptives", "outputs/models"))
+source(ap("R/helpers.R"))
+ensure_dirs(c(ap("clean"), ap("outputs/figures"), ap("outputs/descriptives"), ap("outputs/models")))
 
 cat("[1/4] Running data cleaning (R/01_data_cleaning.R)...\n")
-source("R/01_data_cleaning.R")
+source(ap("R/01_data_cleaning.R"))
 cat("[1/4] Done.\n\n")
 
 cat("[2/4] Running EDA (R/02_eda.R)...\n")
-source("R/02_eda.R")
+source(ap("R/02_eda.R"))
 cat("[2/4] Done.\n\n")
 
 cat("[3/4] Fitting models (R/03_fit_nb_models.R)...\n")
-source("R/03_fit_nb_models.R")
+source(ap("R/03_fit_nb_models.R"))
 cat("[3/4] Done.\n\n")
 
 cat("[4/4] Generating reporting outputs (R/04_report_nb_outputs.R)...\n")
-source("R/04_report_nb_outputs.R")
+source(ap("R/04_report_nb_outputs.R"))
 cat("[4/4] Done.\n\n")
 
 elapsed <- difftime(Sys.time(), run_ts, units = "secs")

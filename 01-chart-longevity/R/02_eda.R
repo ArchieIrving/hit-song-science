@@ -9,11 +9,13 @@ suppressPackageStartupMessages({
   library(rlang)
   library(scico)
 })
+source(here::here("01-chart-longevity", "R", "paths.R"))
 
-source("R/analysis_setup.R")
-source("R/helpers.R")
 
-ensure_dirs(c("outputs/figures", "outputs/descriptives"))
+source(ap("R/analysis_setup.R"))
+source(ap("R/helpers.R"))
+
+ensure_dirs(c(ap("outputs/figures"), ap("outputs/descriptives")))
 
 # ---- Correlation heatmap (continuous predictors) --------------------------
 
@@ -153,7 +155,7 @@ run_eda <- function(df,
       dplyr::select(Variable, mean, sd, median, min, max, IQR) |>
       arrange(Variable)
     
-    write_csv(cont_tab, "outputs/descriptives/predictor_summary_continuous.csv")
+    write_csv(cont_tab, ap("outputs/descriptives/predictor_summary_continuous.csv"))
   }
   
   if (length(cat_all) > 0) {
@@ -171,7 +173,7 @@ run_eda <- function(df,
       ungroup() |>
       arrange(Variable, desc(count))
     
-    write_csv(cat_tab, "outputs/descriptives/predictor_summary_categorical.csv")
+    write_csv(cat_tab, ap("outputs/descriptives/predictor_summary_categorical.csv"))
   }
   
   # ---- Musical categorical proportions -----------------------------------
@@ -300,7 +302,7 @@ run_eda <- function(df,
       paste0("Share of songs lasting 1 week: ", round(100 * mean(df[[outcome_var]] == 1), 1), "%"),
       paste0("Share of songs lasting <= 2 weeks: ", round(100 * mean(df[[outcome_var]] <= 2), 1), "%")
     ),
-    "outputs/descriptives/eda_summary.txt"
+    ap("outputs/descriptives/eda_summary.txt")
   )
   
   invisible(TRUE)
@@ -308,7 +310,7 @@ run_eda <- function(df,
 
 # ---- Run -----------------------------------------------------------------
 
-song_df <- read_csv("clean/song_df.csv", show_col_types = FALSE)
+song_df <- read_csv(ap("clean/song_df.csv"), show_col_types = FALSE)
 song_df <- encode_factors(song_df)
 
 run_eda(

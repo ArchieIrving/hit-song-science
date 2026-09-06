@@ -30,9 +30,11 @@ suppressPackageStartupMessages({
   library(tidyr)
   library(tibble)
 })
+source(here::here("01-chart-longevity", "R", "paths.R"))
 
-source("R/analysis_setup.R")
-source("R/helpers.R")
+
+source(ap("R/analysis_setup.R"))
+source(ap("R/helpers.R"))
 
 # ---- Parameters + dirs ----------------------------------------------------
 
@@ -40,8 +42,8 @@ DHARMA_N     <- 1000
 DHARMA_SEED  <- 123
 IRR_P_CUTOFF <- 0.05
 
-DIR_MODELS  <- "outputs/models"
-DIR_FIGURES <- "outputs/figures"
+DIR_MODELS  <- ap("outputs/models")
+DIR_FIGURES <- ap("outputs/figures")
 ensure_dirs(c(DIR_MODELS, DIR_FIGURES))
 
 # ---- Load models + metadata ----------------------------------------------
@@ -94,7 +96,7 @@ extract_lrt <- function(a) {
 
 # ---- Complete-case raw sample (SD conversion + descriptives) --------------
 
-song_df_raw <- read_csv("clean/song_df.csv", show_col_types = FALSE) |>
+song_df_raw <- read_csv(ap("clean/song_df.csv"), show_col_types = FALSE) |>
   encode_factors()
 
 model_vars_rich <- all.vars(stats::formula(m_pois))
