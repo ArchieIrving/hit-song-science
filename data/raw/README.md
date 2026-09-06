@@ -20,7 +20,7 @@ Song-level metadata and artist information.
 
 Key variables include:
 - song_id: Spotify identifier for the song
-- name: song title
+- song_name: song title
 - artists: credited performing artists
 - explicit: indicator for explicit content
 - song_type: solo or collaborative song classification
@@ -29,7 +29,7 @@ Key variables include:
 Weekly Billboard chart performance for songs.
 
 Key variables include:
-- id: Spotify identifier for the song
+- song_id: Spotify identifier for the song
 - rank_score: chart entry rank score
 - peak_position: highest chart position achieved
 - weeks_on_chart: number of weeks on chart

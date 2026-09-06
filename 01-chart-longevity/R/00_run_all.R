@@ -1,8 +1,9 @@
 # R/00_run_all.R ------------------------------------------------------------
 # Runs the full analysis pipeline end-to-end from the project root.
 
-#All scripts assume the working directory is this folder (01-chart-longevity/), containing clean/, outputs/, and R/.
-#Raw input data is shared and lives one level up, at ../data/raw/.
+# R/paths.R resolves every path from the repository root, so these scripts run
+# correctly whatever the working directory is. Raw input is shared with the
+# other analysis and lives at data/raw/.
 
 
 options(tibble.width = Inf, scipen = 999)

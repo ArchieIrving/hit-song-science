@@ -15,7 +15,7 @@ Two questions drove the analysis:
 
 ## Data
 
-MusicOSet joins Billboard chart performance to song metadata and Spotify acoustic features. Raw files are shared with the clustering analysis and held at `../data/raw/`.
+MusicOSet joins Billboard chart performance to song metadata and Spotify acoustic features. Raw files are shared with the clustering analysis and held at `data/raw/` in the repository root.
 
 Only tables with a week variable were kept, so everything could be aligned to the point of chart entry and nothing from later in a song's run could leak backwards into its predictors. That gave acoustic features and metadata for 20,405 songs, plus 250,392 weekly chart observations.
 
@@ -98,15 +98,17 @@ Acoustic features are treated here as independent predictors. The [clustering an
 | Language | R 4.x |
 | Packages | tidyverse, MASS, AER, performance, DHARMa, broom, scico |
 | Entry point | `R/00_run_all.R` |
-| Input | `../data/raw/` (MusicOSet) |
+| Input | `data/raw/` (MusicOSet, shared with the clustering analysis) |
 | Output | `clean/song_df.csv`, `outputs/figures/`, `outputs/models/`, `outputs/descriptives/` |
 | Runtime | about a minute |
 
-Open `01-chart-longevity.Rproj` in RStudio so the working directory is set to this folder, then:
+Open `hit-song-science.Rproj` at the repository root in RStudio, then:
 
 ```r
-source("R/00_run_all.R")
+source(here::here("01-chart-longevity", "R", "00_run_all.R"))
 ```
+
+Paths resolve from the project root, so no working directory needs setting. `source("run_all.R")` from the root runs this analysis and the clustering analysis together.
 
 | Script | Does |
 |---|---|
@@ -116,3 +118,4 @@ source("R/00_run_all.R")
 | `R/04_report_nb_outputs.R` | Effect tables, diagnostics, figures |
 | `R/analysis_setup.R` | Variable sets, labels, encoding, scaling |
 | `R/helpers.R` | Shared utilities and plot theme |
+| `R/paths.R` | Resolves this analysis's paths from the repository root |

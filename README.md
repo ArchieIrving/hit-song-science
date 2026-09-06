@@ -101,8 +101,17 @@ The analyses suggest that unstable Hit Song Science findings may partly reflect 
 
 ```text
 .
+├── hit-song-science.Rproj     # Open this: all paths resolve from the root
+├── run_all.R                  # Runs both analyses end to end
+│
+├── R/
+│   └── common/                # Shared MusicOSet ingestion and utilities
+│
+├── tests/                     # Recorded baseline and verification script
+│
 ├── data/
-│   └── raw/                   # Shared MusicOSet source files
+│   ├── raw/                   # Shared MusicOSet source files
+│   └── processed/             # Diagnostic by-products (gitignored)
 │
 ├── 01-chart-longevity/        # Modelling sustained chart presence
 │   ├── R/
@@ -111,6 +120,7 @@ The analyses suggest that unstable Hit Song Science findings may partly reflect 
 │
 ├── 02-acoustic-structures/    # PCA and clustering of acoustic features
 │   ├── R/
+│   │   └── figures/           # One script per figure
 │   ├── clean/
 │   └── outputs/
 │
@@ -123,19 +133,39 @@ Each analysis has its own README containing the methodology, diagnostics, result
 
 Both analyses use MusicOSet, an open dataset linking Billboard chart history with song metadata and Spotify-derived audio features.
 
-The source data contain more than 20,000 songs spanning several decades up to 2018. Analytical samples differ slightly between the two analyses after cleaning and exclusion criteria are applied.
+The source data contain more than 20,000 songs spanning several decades up to 2018. Both analyses apply the same entry criteria and arrive at the same **20,303 songs**: the two cleaned datasets contain exactly the same song IDs. Their schemas differ, because each derives only the variables its own model needs — the longevity analysis adds artist-history and musical-category variables, the clustering analysis adds chart-timing variables and alternative rank measures.
 
 MusicOSet is released under CC BY 4.0.
 
-## Reproducing the analyses
+## Quick start
 
-Both analyses are written in **R** and can be run independently. Open the corresponding `.Rproj` file in either analysis directory, then run:
+Everything is written in **R** and runs from the repository root. Open `hit-song-science.Rproj` in RStudio; every path resolves from the project root, so there is no working directory to set.
+
+Install the packages once:
 
 ```r
-source("R/00_run_all.R")
+install.packages(c(
+  "here", "tidyverse", "withr", "rlang", "scales",
+  "MASS", "AER", "performance", "DHARMa", "broom", "scico",
+  "cluster", "ggridges", "ggbeeswarm"
+))
 ```
 
-See the individual analysis READMEs for package requirements, processing steps and generated outputs:
+Then run both analyses and check the results against the recorded baseline:
+
+```r
+source("run_all.R")                # both analyses end to end, about two minutes
+source("tests/verify_refactor.R")  # 27 sentinel checks, errors if any fail
+```
+
+Each analysis also runs on its own from the same project:
+
+```r
+source(here::here("01-chart-longevity", "R", "00_run_all.R"))
+source(here::here("02-acoustic-structures", "R", "00_run_all.R"))
+```
+
+See the individual analysis READMEs for methodology, processing steps and generated outputs:
 
 - [01 — Redefining Musical Success: Chart Longevity](01-chart-longevity/)
 - [02 — Acoustic Structures, Not Features](02-acoustic-structures/)

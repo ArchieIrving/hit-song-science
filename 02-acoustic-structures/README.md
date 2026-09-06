@@ -14,7 +14,7 @@ The analysis asks three things: do coherent acoustic profiles emerge, do they ch
 
 ## Data
 
-MusicOSet, shared with the longevity model and held at `../data/raw/`. Songs already mid-run when the data begins were dropped so chart runs aren't cut off, and records with missing values or invalid tempo were removed.
+MusicOSet, shared with the longevity model and held at `data/raw/` in the repository root. Songs already mid-run when the data begins were dropped so chart runs aren't cut off, and records with missing values or invalid tempo were removed.
 
 ## Method
 
@@ -95,23 +95,29 @@ Everything is static, so a reader can't check how the picture changes under a di
 | | |
 |---|---|
 | Language | R 4.x |
-| Packages | tidyverse, cluster, ggridges, ggbeeswarm, patchwork, zoo, scales |
+| Packages | tidyverse, cluster, ggridges, ggbeeswarm, scales |
 | Entry point | `R/00_run_all.R` |
-| Input | `../data/raw/` (MusicOSet) |
+| Input | `data/raw/` (MusicOSet, shared with the longevity analysis) |
 | Output | `clean/`, `outputs/figures/`, `outputs/eda/` |
 | Runtime | about 30 seconds |
 | Reproducibility | Seeded; cluster names derived from the data, not from k-means numbering |
 
-Open `02-acoustic-structures.Rproj` in RStudio so the working directory is set to this folder, then:
+Open `hit-song-science.Rproj` at the repository root in RStudio, then:
 
 ```r
-source("R/00_run_all.R")
+source(here::here("02-acoustic-structures", "R", "00_run_all.R"))
 ```
+
+Paths resolve from the project root, so no working directory needs setting. `source("run_all.R")` from the root runs this analysis and the longevity model together.
 
 | Script | Does |
 |---|---|
 | `R/01_data_cleaning.R` | Joins the raw tables, writes `clean/song_df.csv` |
 | `R/02_eda.R` | PCA, cluster diagnostics, sensitivity checks, final clustering |
 | `R/03_build_figures.R` | Loads clustered data and runs the four figure scripts |
-| `R/figures/F1–F4` | One script per figure |
+| `R/figures/F1_cluster_profiles.R` | Figure 1, acoustic feature profiles by cluster (radar) |
+| `R/figures/F2_cluster_persistence.R` | Figure 2, cluster prevalence over time |
+| `R/figures/F3_cluster_rankings.R` | Figure 3, peak chart rank by cluster |
+| `R/figures/F4_cluster_duration.R` | Figure 4, chart longevity by cluster |
 | `R/helpers.R` | Shared constants, PCA and clustering helpers, plot theme |
+| `R/paths.R` | Resolves this analysis's paths from the repository root |
