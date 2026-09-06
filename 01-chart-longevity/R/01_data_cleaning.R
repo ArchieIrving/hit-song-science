@@ -9,12 +9,12 @@ suppressPackageStartupMessages({
   library(stringr)
   library(purrr)
 })
-source(here::here("01-chart-longevity", "R", "paths.R"))
+source(here::here("01-chart-longevity", "R", "paths.R"), local = TRUE)
 
 
-source(ap("R/helpers.R"))
-source(ap("R/analysis_setup.R"))
-source(here::here("R", "common", "ingest_musicoset.R"))
+source(ap("R/helpers.R"), local = TRUE)
+source(ap("R/analysis_setup.R"), local = TRUE)
+source(here::here("R", "common", "ingest_musicoset.R"), local = TRUE)
 ensure_dirs(ap("clean"))
 
 # ---- Load inputs ----------------------------------------------------------

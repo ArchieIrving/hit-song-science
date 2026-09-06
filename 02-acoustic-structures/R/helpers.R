@@ -131,20 +131,6 @@ scale_colour_cluster <- function(...) {
   scale_colour_manual(values = CLUSTER_PAL, breaks = CLUSTER_LEVELS, drop = FALSE, ...)
 }
 
-# ---- PCA helper: variance explained labels --------------------------------
-
-pca_ve_labels <- function(ve, k = 5) {
-  k <- min(k, length(ve))
-  cum <- cumsum(ve)
-  
-  tibble(
-    PC = paste0("PC", 1:k),
-    ve = ve[1:k],
-    cum = cum[1:k],
-    label = sprintf("PC%d: %.1f%% (cum %.1f%%)", 1:k, 100 * ve[1:k], 100 * cum[1:k])
-  )
-}
-
 # ---- PCA helper: fit + extract core outputs -------------------------------
 # Pure helper (no IO). Useful to keep PCA outputs consistent across scripts.
 
@@ -178,26 +164,9 @@ run_kmeans <- function(X, k, nstart = KMEANS_NSTART, seed = SEED, iter.max = 100
   kmeans(X, centers = k, nstart = nstart, iter.max = iter.max, algorithm = "MacQueen")
 }
 
-# ---- Feature label helpers ------------------------------------------------
-
-feature_labels_core <- c(
-  acousticness     = "Acousticness",
-  danceability     = "Danceability",
-  energy           = "Energy",
-  instrumentalness = "Instrumentalness",
-  liveness         = "Liveness",
-  speechiness      = "Speechiness",
-  valence          = "Valence",
-  tempo            = "Tempo"
-)
-
-label_features_core <- function(x) {
-  unname(feature_labels_core[x])
-}
-
 # ---- Shared utilities -----------------------------------------------------
 
-source(here::here("R", "common", "utils.R"))
+source(here::here("R", "common", "utils.R"), local = TRUE)
 
 # ---- Output logging helper -----------------------------------------------
 

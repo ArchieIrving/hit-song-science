@@ -10,11 +10,11 @@ suppressPackageStartupMessages({
   library(MASS) # glm.nb (masks dplyr::select())
   library(AER)  # dispersiontest
 })
-source(here::here("01-chart-longevity", "R", "paths.R"))
+source(here::here("01-chart-longevity", "R", "paths.R"), local = TRUE)
 
 
-source(ap("R/analysis_setup.R"))
-source(ap("R/helpers.R"))
+source(ap("R/analysis_setup.R"), local = TRUE)
+source(ap("R/helpers.R"), local = TRUE)
 
 # ---- Output paths ---------------------------------------------------------
 
@@ -26,9 +26,15 @@ ensure_dirs(DIR_MODELS)
 
 # ---- Model formulas -------------------------------------------------------
 
-# Main model used for reporting (core + acoustic features)
+# A formula carries the environment it was built in, and that environment is
+# serialised alongside every model fitted from it. Building these in the global
+# environment keeps all_models.rds identical whether the pipeline is run on its
+# own or through run_all.R, and stops a saved model from dragging the analysis
+# workspace with it. Every model variable comes from `data`, so nothing is
+# looked up here.
 f_main <- stats::as.formula(
-  paste0(OUTCOME_VAR, " ~ ", paste(c(core_vars, audio_vars), collapse = " + "))
+  paste0(OUTCOME_VAR, " ~ ", paste(c(core_vars, audio_vars), collapse = " + ")),
+  env = globalenv()
 )
 
 # Comparison model including musical categoricals
@@ -36,6 +42,7 @@ f_cat <- stats::update(
   f_main,
   stats::as.formula(paste(". ~ . +", paste(cat_vars, collapse = " + ")))
 )
+environment(f_cat) <- globalenv()
 
 # Poisson is fitted for overdispersion comparison on the richest specification
 f_pois <- f_cat
@@ -87,6 +94,36 @@ models <- list(
 )
 
 # ---- Save models and metadata --------------------------------------------
+
+# A fitted model holds references to the environment it was fitted in, and
+# saveRDS writes out any environment that is not a named one. Fitted inside
+# run_all.R rather than at the top level, that would put the whole analysis
+# workspace into all_models.rds and quadruple the file. Two kinds of reference
+# have to be re-anchored:
+#
+#   - formula and terms objects, which carry an .Environment attribute;
+#   - the Poisson family. stats::poisson() never forces its `link` argument,
+#     so the closures it returns keep its evaluation frame alive, and that
+#     frame holds an unforced promise pointing back at the caller. Rebuilding
+#     the family from the model's own recorded call, in the global
+#     environment, drops that link and leaves the family itself unchanged.
+#
+# Nothing is ever looked up through these environments: each model carries its
+# own data, model frame and terms.
+anchor_model_env <- function(model) {
+  for (slot in c("formula", "terms")) {
+    if (!is.null(model[[slot]])) environment(model[[slot]]) <- globalenv()
+  }
+  if (!is.null(attr(model$model, "terms"))) {
+    environment(attr(model$model, "terms")) <- globalenv()
+  }
+  if (!is.null(model$call$family)) {
+    model$family <- eval(model$call$family, globalenv())
+  }
+  model
+}
+
+models <- lapply(models, anchor_model_env)
 
 save_rds_safe(models, PATH_MODELS)
 

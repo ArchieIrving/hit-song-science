@@ -30,11 +30,11 @@ suppressPackageStartupMessages({
   library(tidyr)
   library(tibble)
 })
-source(here::here("01-chart-longevity", "R", "paths.R"))
+source(here::here("01-chart-longevity", "R", "paths.R"), local = TRUE)
 
 
-source(ap("R/analysis_setup.R"))
-source(ap("R/helpers.R"))
+source(ap("R/analysis_setup.R"), local = TRUE)
+source(ap("R/helpers.R"), local = TRUE)
 
 # ---- Parameters + dirs ----------------------------------------------------
 

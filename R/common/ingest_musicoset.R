@@ -14,7 +14,7 @@
 # masks dplyr::select, and shared infrastructure must not depend on whatever
 # happens to be on the search path.
 
-source(here::here("R", "common", "utils.R"))
+source(here::here("R", "common", "utils.R"), local = TRUE)
 
 # ---- File reading ---------------------------------------------------------
 

@@ -152,10 +152,3 @@ label_increment_suffix <- function(term) {
     TRUE                                 ~ ""
   )
 }
-
-# ---- Formula builder ------------------------------------------------------
-
-build_nb_formula <- function() {
-  rhs <- c(core_vars, audio_vars, cat_vars)
-  stats::as.formula(paste0(OUTCOME_VAR, " ~ ", paste(rhs, collapse = " + ")))
-}

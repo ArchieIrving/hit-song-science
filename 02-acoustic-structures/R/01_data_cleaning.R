@@ -6,11 +6,11 @@ suppressPackageStartupMessages({
   library(dplyr)
   library(readr)
 })
-source(here::here("02-acoustic-structures", "R", "paths.R"))
+source(here::here("02-acoustic-structures", "R", "paths.R"), local = TRUE)
 
 
-source(ap("R/helpers.R"))
-source(here::here("R", "common", "ingest_musicoset.R"))
+source(ap("R/helpers.R"), local = TRUE)
+source(here::here("R", "common", "ingest_musicoset.R"), local = TRUE)
 ensure_dirs(ap("clean"))
 
 # ---- Load inputs ----------------------------------------------------------

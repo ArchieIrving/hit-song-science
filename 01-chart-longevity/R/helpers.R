@@ -8,12 +8,12 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(readr)
 })
-source(here::here("01-chart-longevity", "R", "paths.R"))
+source(here::here("01-chart-longevity", "R", "paths.R"), local = TRUE)
 
 
 # ---- Shared utilities ----------------------------------------------------
 
-source(here::here("R", "common", "utils.R"))
+source(here::here("R", "common", "utils.R"), local = TRUE)
 
 # ---- Saving helpers ------------------------------------------------------
 

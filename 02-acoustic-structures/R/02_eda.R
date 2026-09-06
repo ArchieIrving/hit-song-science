@@ -13,10 +13,10 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(cluster)
 })
-source(here::here("02-acoustic-structures", "R", "paths.R"))
+source(here::here("02-acoustic-structures", "R", "paths.R"), local = TRUE)
 
 
-source(ap("R/helpers.R"))
+source(ap("R/helpers.R"), local = TRUE)
 
 DIR_EDA <- ap("outputs/eda")
 DIR_EDA_TABLES <- file.path(DIR_EDA, "tables")
@@ -250,9 +250,6 @@ with_log(file.path(DIR_EDA, "eda_log.txt"), {
       summarise(across(where(is.numeric), mean), .groups = "drop"),
     digits = 3
   )
-  
-  assign("km_final", km_final, envir = .GlobalEnv)
-  assign("label_map_final", label_map_final, envir = .GlobalEnv)
 })
 
 # --------------------------------------------------------------------------

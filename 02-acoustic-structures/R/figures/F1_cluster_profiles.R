@@ -1,5 +1,7 @@
+# R/figures/F1_cluster_profiles.R --------------------------------------------
 # ============================================================================
-# Figure 01: Acoustic feature profiles by cluster (TRUE RADAR; facets)
+# Figure 01: Acoustic feature profiles by cluster (radar; facets)
+# Output: 01_cluster_profiles.png
 # ============================================================================
 
 # ---- Local parameters ------------------------------------------------------
@@ -28,11 +30,6 @@ feature_labels <- c(
 )
 
 # ---- Data preparation ------------------------------------------------------
-
-cluster_profile_df <- read_csv(
-  ap("clean/cluster_feature_profiles.csv"),
-  show_col_types = FALSE
-)
 
 profile_df_01 <- cluster_profile_df %>%
   mutate(

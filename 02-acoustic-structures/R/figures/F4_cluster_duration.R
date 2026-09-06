@@ -1,14 +1,8 @@
+# R/figures/F4_cluster_duration.R --------------------------------------------
 # ============================================================================
 # Figure 04: Song longevity by cluster (ridgeline; raw scale)
+# Output: 04_cluster_duration.png
 # ============================================================================
-
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(ggplot2)
-  library(ggridges)
-})
-
-source(ap("R/helpers.R"))
 
 WIDTH_04  <- 12
 HEIGHT_04 <- 7
